@@ -36,11 +36,13 @@
             </a>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ ('shared_project_timesheets.view.month.' ~ month) | trans }}
+                    {% set tmpMonth = report_date(year, month) %}
+                    {{ tmpMonth|month_name }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-start pre-scrollable">
                     {% for i in 1..12 %}
-                        <li><a href="{{ app.request.pathinfo }}?year={{ year }}&month={{ i }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}" class="dropdown-item {{ i == month ? 'active' : '' }}">{{ ('shared_project_timesheets.view.month.' ~ i) | trans }}</a></li>
+                        {% set tmpMonth = report_date(year, i) %}
+                        <li><a href="{{ app.request.pathinfo }}?year={{ year }}&month={{ i }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}" class="dropdown-item {{ i == month ? 'active' : '' }}">{{ tmpMonth|month_name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
