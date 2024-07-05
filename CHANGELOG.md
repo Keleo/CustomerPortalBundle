@@ -2,7 +2,7 @@
 
 ## 3.2.0
 
-Compatibility: requires minimum Kimai 2.18.0
+Compatibility: requires minimum Kimai 2.19.0
 
 - Fix dropdowns
 
