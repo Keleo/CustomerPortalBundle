@@ -72,7 +72,7 @@
         <span class="ps-2">{{ sharedProject.project.name }}</span>
     </h2>
 
-    {% if statsPerMonth != null %}
+    {% if statsPerMonth is not null %}
     <div class="row mb-3">
         <div class="col-md-12">
             <div class="card">
@@ -103,10 +103,10 @@
                 </div>
             {% endif %}
         </div>
-        <div class="card-body{% if timeRecords is not empty%} p-0{% endif %}">
+        <div class="card-body{% if timeRecords is not empty and statsPerDay is null %} p-0{% endif %}">
             {% if timeRecords is empty %}
                 {{ nothing_found() }}
-            {% elseif statsPerDay == null %}
+            {% elseif statsPerDay is null %}
                 <table class="table table-vcenter table-hover dataTable">
                     <thead>
                         <tr>
@@ -115,7 +115,7 @@
                             <th>{{ 'shared_project_timesheets.view.table.user' | trans }}</th>
                             {% endif %}
                             <th>{{ 'shared_project_timesheets.view.table.description' | trans }}</th>
-                            <th class="w-min">{{ 'shared_project_timesheets.view.table.duration' | trans }}</th>
+                            <th class="w-min">{{ 'duration'|trans }}</th>
                             {% if sharedProject.entryRateVisible %}
                             <th class="w-min">{{ 'hourlyRate' | trans }}</th>
                             <th class="w-min">{{ 'total_rate' | trans }}</th>
