@@ -22,14 +22,15 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/auth/shared-project-timesheets')]
 class ViewController extends AbstractController
 {
-    public function __construct(
-        private ViewService $viewService,
-        private SharedProjectTimesheetRepository $sharedProjectTimesheetRepository
-    ) {
-    }
-
     #[Route(path: '/{id}/{shareKey}', name: 'view_shared_project_timesheets', methods: ['GET', 'POST'])]
-    public function indexAction(Project $project, string $shareKey, Request $request, ProjectStatisticService $statisticsService): Response
+    public function indexAction(
+        Project $project,
+        string $shareKey,
+        Request $request,
+        ProjectStatisticService $statisticsService,
+        ViewService $viewService,
+        SharedProjectTimesheetRepository $sharedProjectTimesheetRepository
+    ): Response
     {
         $givenPassword = $request->get('spt-password');
         $year = (int) $request->get('year', date('Y'));
@@ -37,7 +38,7 @@ class ViewController extends AbstractController
         $detailsMode = $request->get('details', 'table');
 
         // Get project.
-        $sharedProject = $this->sharedProjectTimesheetRepository->findByProjectAndShareKey(
+        $sharedProject = $sharedProjectTimesheetRepository->findByProjectAndShareKey(
             $project->getId(),
             $shareKey
         );
@@ -47,7 +48,7 @@ class ViewController extends AbstractController
         }
 
         // Check access.
-        if (!$this->viewService->hasAccess($sharedProject, $givenPassword)) {
+        if (!$viewService->hasAccess($sharedProject, $givenPassword)) {
             return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
                 'project' => $sharedProject->getProject(),
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
@@ -55,7 +56,7 @@ class ViewController extends AbstractController
         }
 
         // Get time records.
-        $timeRecords = $this->viewService->getTimeRecords($sharedProject, $year, $month);
+        $timeRecords = $viewService->getTimeRecords($sharedProject, $year, $month);
 
         // Calculate summary.
         $rateSum = 0;
@@ -76,11 +77,15 @@ class ViewController extends AbstractController
         $annualChartVisible = $sharedProject->isAnnualChartVisible();
         $monthlyChartVisible = $sharedProject->isMonthlyChartVisible();
 
-        $statsPerMonth = $annualChartVisible ? $this->viewService->getAnnualStats($sharedProject, $year) : null;
+        $statsPerMonth = $annualChartVisible ? $viewService->getAnnualStats($sharedProject, $year) : null;
         $statsPerDay = ($monthlyChartVisible && $detailsMode === 'chart')
-            ? $this->viewService->getMonthlyStats($sharedProject, $year, $month) : null;
+            ? $viewService->getMonthlyStats($sharedProject, $year, $month) : null;
 
-        $stats = $statisticsService->getBudgetStatisticModel($project, $this->getDateTimeFactory()->createDateTime());
+        // we cannot call $this->getDateTimeFactory() as it throws a AccessDeniedException for anonymous users
+        $timezone = $project->getCustomer()->getTimezone() ?? date_default_timezone_get();
+        $date = new \DateTimeImmutable('now', new \DateTimeZone($timezone));
+
+        $stats = $statisticsService->getBudgetStatisticModel($project, $date);
 
         return $this->render('@SharedProjectTimesheets/view/timesheet.html.twig', [
             'sharedProject' => $sharedProject,
