@@ -50,11 +50,11 @@
         "phpstan": "../../../vendor/bin/phpstan analyse . --configuration=phpstan.neon"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "*",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "kimai/kimai": "dev-main",
+        "phpstan/phpstan": "^1.0",
         "phpstan/phpstan-doctrine": "^1.0",
-        "phpstan/phpstan-symfony": "^1.0",
-        "phpunit/phpunit": "^8.0",
-        "symfony/phpunit-bridge": "^4.4"
+        "phpstan/phpstan-strict-rules": "^1.0",
+        "phpstan/phpstan-symfony": "^1.0"
     }
 }
