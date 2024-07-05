@@ -15,6 +15,9 @@ class ChartStat
     private int $duration;
     private float $rate;
 
+    /**
+     * @param array{'duration': int, 'rate': float}|null $resultRow
+     */
     public function __construct(?array $resultRow = null)
     {
         $this->duration = (int) ($resultRow !== null && isset($resultRow['duration']) ? $resultRow['duration'] : 0);

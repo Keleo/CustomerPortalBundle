@@ -46,8 +46,14 @@
     },
     "scripts": {
         "test": "phpunit tests/",
-        "codestyle-fix": "../../../vendor/bin/php-cs-fixer fix",
-        "phpstan": "../../../vendor/bin/phpstan analyse . --configuration=phpstan.neon"
+        "codestyle-fix": "vendor/bin/php-cs-fixer fix",
+        "codestyle-check": "vendor/bin/php-cs-fixer fix --dry-run --verbose --using-cache=no --show-progress=none --format=checkstyle",
+        "phpstan": "vendor/bin/phpstan analyse . --configuration=phpstan.neon",
+        "linting": [
+            "composer validate --strict --no-check-version",
+            "@codestyle-check",
+            "@phpstan"
+        ]
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

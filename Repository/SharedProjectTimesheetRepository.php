@@ -20,6 +20,9 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
 
+/**
+ * @extends EntityRepository<SharedProjectTimesheet>
+ */
 class SharedProjectTimesheetRepository extends EntityRepository
 {
     public function findAllSharedProjects(BaseQuery $query): Pagination

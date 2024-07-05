@@ -12,6 +12,7 @@ namespace KimaiPlugin\SharedProjectTimesheetsBundle\Controller;
 
 use App\Controller\AbstractController;
 use App\Entity\Project;
+use App\Project\ProjectStatisticService;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ViewService;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class ViewController extends AbstractController
     }
 
     #[Route(path: '/{id}/{shareKey}', name: 'view_shared_project_timesheets', methods: ['GET', 'POST'])]
-    public function indexAction(Project $project, string $shareKey, Request $request): Response
+    public function indexAction(Project $project, string $shareKey, Request $request, ProjectStatisticService $statisticsService): Response
     {
         $givenPassword = $request->get('spt-password');
         $year = (int) $request->get('year', date('Y'));
@@ -79,6 +80,8 @@ class ViewController extends AbstractController
         $statsPerDay = ($monthlyChartVisible && $detailsMode === 'chart')
             ? $this->viewService->getMonthlyStats($sharedProject, $year, $month) : null;
 
+        $stats = $statisticsService->getBudgetStatisticModel($project, $this->getDateTimeFactory()->createDateTime());
+
         return $this->render('@SharedProjectTimesheets/view/timesheet.html.twig', [
             'sharedProject' => $sharedProject,
             'timeRecords' => $timeRecords,
@@ -91,6 +94,7 @@ class ViewController extends AbstractController
             'monthlyChartVisible' => $monthlyChartVisible,
             'statsPerDay' => $statsPerDay,
             'detailsMode' => $detailsMode,
+            'stats' => $stats,
         ]);
     }
 }
