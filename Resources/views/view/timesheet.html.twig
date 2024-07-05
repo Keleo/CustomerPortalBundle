@@ -13,9 +13,13 @@
 {% endblock %}
 
 {% block head %}
-    {{ parent() }}
     {{ encore_entry_script_tags('app') }}
     {{ encore_entry_script_tags('chart') }}
+{% endblock %}
+
+{% block javascripts %}
+    {% import "macros/webloader.html.twig" as webloader %}
+    {{ webloader.init_frontend_loader() }}
 {% endblock %}
 
 {% block page_classes %}page{% endblock %}
