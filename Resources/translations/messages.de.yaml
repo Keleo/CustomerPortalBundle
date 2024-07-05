@@ -56,7 +56,6 @@ shared_project_timesheets:
             title: Details
             date: Datum
             description: Beschreibung
-            duration: Dauer
             empty: Keine Einträge verfügbar für diesen Monat
             user: Benutzer
             rate_hour: Stundenlohn

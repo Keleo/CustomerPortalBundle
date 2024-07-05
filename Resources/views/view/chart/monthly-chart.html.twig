@@ -16,7 +16,7 @@
                 {% endfor %}
             ],
             datasets: [{
-                label: '{{ 'shared_project_timesheets.view.table.duration' | trans }}',
+                label: '{{ 'duration'|trans }}',
                 backgroundColor: '{{ backgroundColor }}',
                 data: [
                     {% for stats in statsPerDay %}
@@ -38,7 +38,7 @@
                 y: {
                     scaleLabel: {
                         display: true,
-                        labelString: '{{ 'shared_project_timesheets.view.table.duration' | trans }}',
+                        labelString: '{{ 'duration'|trans }}',
                     },
                     ticks: {
                         beginAtZero: true
