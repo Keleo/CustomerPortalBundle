@@ -12,8 +12,7 @@ namespace KimaiPlugin\SharedProjectTimesheetsBundle\Repository;
 
 use App\Entity\Customer;
 use App\Entity\Project;
-use App\Repository\Loader\DefaultLoader;
-use App\Repository\Paginator\LoaderPaginator;
+use App\Repository\Paginator\QueryBuilderPaginator;
 use App\Repository\Query\BaseQuery;
 use App\Repository\Query\ProjectQuery;
 use App\Utils\Pagination;
@@ -34,7 +33,7 @@ class SharedProjectTimesheetRepository extends EntityRepository
             ->leftJoin(Customer::class, 'c', Join::WITH, 'spt.customer = c')
             ->orderBy('p.name, c.name, spt.shareKey', 'ASC');
 
-        $loader = new LoaderPaginator(new DefaultLoader(), $qb, $this->count([]));
+        $loader = new QueryBuilderPaginator($qb, $this->count([]));
 
         return new Pagination($loader, $query);
     }
