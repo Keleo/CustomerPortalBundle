@@ -179,9 +179,6 @@
     {% if ((stats.hasBudget() and sharedProject.isBudgetStatsVisible()) or (stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible())) %}
         {% import "macros/progressbar.html.twig" as progress %}
         <div class="card mb-3">
-            <div class="card-header">
-                <h3 class="card-title">{{ 'shared_project_timesheets.view.stats.title' | trans }}</h3>
-            </div>
             <div class="card-body p-0">
                 <table class="table table-hover dataTable">
                     {% if stats.hasBudget() and sharedProject.isBudgetStatsVisible() %}
@@ -214,26 +211,41 @@
             <h3 class="card-title">{{ 'projects'|trans }}</h3>
         </div>
         <div class="card-body p-0 todocorrectclass">
-            {% if projects is empty %}
+            {% if projectStats is empty %}
                 {{ nothing_found() }}
             {% else %}
                 <table class="table table-hovertable-vcenter table-hover dataTable">
                     <thead>
                         <tr>
-                            <th class="w-min">NAME</th>
-                            <th class="w-min">COMMENT</th>
+                            <th>{{ 'name'|trans }}</th>
+                            {% if (sharedProject.isBudgetStatsVisible() or sharedProject.isTimeBudgetStatsVisible()) %}
+                                <th></th>
+                            {% endif %}
+                            <th class="w-min"></th>
                         </tr>
                     </thead>
-                    {% for project in projects %}
-                        <tr class="alternative-link" data-href="{{
-                            url('view_shared_project_timesheets_project', {
+                    {% for stats in projectStats %}
+                        {% set project = stats.getProject() %}
+                        {%
+                            set project_url = url('view_shared_project_timesheets_project', {
                                 'customer': customer.getId(),
                                 'shareKey': shareKey,
                                 'project': project.getId(),
-
-                                }) }}">
+                            })
+                        %}
+                        <tr class="alternative-link" data-href="{{ project_url }}">
                             <td>{{ project.name }}</td>
-                            <td>{{ project.comment }}</td>
+                            {% if (sharedProject.isBudgetStatsVisible() or sharedProject.isTimeBudgetStatsVisible()) %}
+                                <td>
+                                    {% if stats.hasBudget() and sharedProject.isBudgetStatsVisible() %}
+                                        {{ progress.progressbar_budget(stats, currency) }}
+                                    {% endif %}
+                                    {% if stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible() %}
+                                        {{ progress.progressbar_timebudget(stats) }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            <td><a href="{{ project_url }}" class="btn btn-primary">{{ 'shared_project_timesheets.view.table.title' | trans }}</a></td>
                         </tr>
                     {% endfor %}
                 </table>

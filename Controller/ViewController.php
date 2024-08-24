@@ -69,7 +69,8 @@ class ViewController extends AbstractController
         Customer $customer,
         string $shareKey,
         Request $request,
-        CustomerStatisticService $statisticsService,
+        CustomerStatisticService $customerStatisticsService,
+        ProjectStatisticService $projectStatisticService,
         ViewService $viewService,
         SharedProjectTimesheetRepository $sharedProjectTimesheetRepository,
     ): Response
@@ -120,13 +121,13 @@ class ViewController extends AbstractController
         // we cannot call $this->getDateTimeFactory() as it throws a AccessDeniedException for anonymous users
         $timezone = $customer->getTimezone() ?? date_default_timezone_get();
         $date = new \DateTimeImmutable('now', new \DateTimeZone($timezone));
-        $stats = $statisticsService->getBudgetStatisticModel($customer, $date);
+        $stats = $customerStatisticsService->getBudgetStatisticModel($customer, $date);
         $projects = $sharedProjectTimesheetRepository->getProjects($sharedProject);
+        $projectStats = $projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
 
         return $this->render('@SharedProjectTimesheets/view/customer.html.twig', [
             'sharedProject' => $sharedProject,
             'customer' => $customer,
-            'projects' => $projects,
             'shareKey' => $shareKey,
             'timeRecords' => $timeRecords,
             'rateSum' => $rateSum,
@@ -139,6 +140,7 @@ class ViewController extends AbstractController
             'statsPerDay' => $statsPerDay,
             'detailsMode' => $detailsMode,
             'stats' => $stats,
+            'projectStats' => $projectStats,
         ]);
     }
 
