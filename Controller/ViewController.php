@@ -165,6 +165,10 @@ class ViewController extends AbstractController
             throw $this->createNotFoundException('Project not found');
         }
 
+        if ($project->getCustomer() !== $customer) {
+            throw $this->createAccessDeniedException('Requested project does not match customer');
+        }
+
         // Check access.
         if (!$viewService->hasAccess($sharedProject, $givenPassword)) {
             return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
