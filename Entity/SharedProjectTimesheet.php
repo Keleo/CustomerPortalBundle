@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(columns: ['share_key'])]
 #[ORM\Index(columns: ['customer_id', 'project_id', 'share_key'])]
 #[ORM\Entity(repositoryClass: SharedProjectTimesheetRepository::class)]
+#[ORM\UniqueConstraint(columns: ['customer_id', 'project_id', 'share_key'])]
 class SharedProjectTimesheet
 {
     public const TYPE_PROJECT = 'project';
