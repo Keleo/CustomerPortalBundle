@@ -12,7 +12,7 @@ namespace KimaiPlugin\SharedProjectTimesheetsBundle\Repository;
 
 use App\Entity\Customer;
 use App\Entity\Project;
-use App\Repository\Paginator\QueryBuilderPaginator;
+use App\Repository\Paginator\QueryPaginator;
 use App\Repository\Query\BaseQuery;
 use App\Repository\Query\ProjectQuery;
 use App\Utils\Pagination;
@@ -26,16 +26,18 @@ use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
  */
 class SharedProjectTimesheetRepository extends EntityRepository
 {
-    public function findAllSharedProjects(BaseQuery $query): Pagination
+    public function findAllSharedProjects(BaseQuery $baseQuery): Pagination
     {
-        $qb = $this->createQueryBuilder('spt')
+        $query = $this->createQueryBuilder('spt')
             ->leftJoin(Project::class, 'p', Join::WITH, 'spt.project = p')
             ->leftJoin(Customer::class, 'c', Join::WITH, 'spt.customer = c')
-            ->orderBy('p.name, c.name, spt.shareKey', 'ASC');
+            ->orderBy('p.name, c.name, spt.shareKey', 'ASC')
+            ->getQuery()
+        ;
 
-        $loader = new QueryBuilderPaginator($qb, $this->count([]));
+        $loader = new QueryPaginator($query, $this->count([]));
 
-        return new Pagination($loader, $query);
+        return new Pagination($loader, $baseQuery);
     }
 
     public function save(SharedProjectTimesheet $sharedProject): void
