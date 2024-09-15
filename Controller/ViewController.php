@@ -22,82 +22,68 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(path: '/auth/shared-project-timesheets')]
 class ViewController extends AbstractController
 {
-    #[Route(path: '/{project}/{shareKey}', name: 'view_shared_project_timesheets', methods: ['GET', 'POST'])]
-    public function indexAction(
-        Project $project,
-        string $shareKey,
-        Request $request,
-        ProjectStatisticService $statisticsService,
-        ViewService $viewService,
-        SharedProjectTimesheetRepository $sharedProjectTimesheetRepository
-    ): Response
+    public function __construct(
+        private readonly ProjectStatisticService $projectStatisticService,
+        private readonly ViewService $viewService,
+        private readonly SharedProjectTimesheetRepository $sharedProjectTimesheetRepository
+    ) {
+    }
+
+    #[Route(path: '/auth/shared-project-timesheets/{project}/{shareKey}', name: 'customer_portal_deprecated_project', methods: ['GET', 'POST'])]
+    #[Route(path: '/auth/customer-portal/p/{project}/{shareKey}', name: 'view_shared_project_timesheets', methods: ['GET', 'POST'])]
+    public function indexAction(Project $project, string $shareKey, Request $request): Response
     {
         $givenPassword = $request->get('spt-password');
 
-        // Get project.
-        $sharedProject = $sharedProjectTimesheetRepository->findByProjectAndShareKey(
+        $sharedPortal = $this->sharedProjectTimesheetRepository->findByProjectAndShareKey(
             $project->getId(),
             $shareKey
         );
 
-        if ($sharedProject === null) {
+        if ($sharedPortal === null) {
             throw $this->createNotFoundException('Project not found');
         }
 
         // Check access.
-        if (!$viewService->hasAccess($sharedProject, $givenPassword)) {
+        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
             return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
-                'project' => $sharedProject->getProject(),
+                'project' => $sharedPortal->getProject(),
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
         }
 
-        return $this->renderProjectView(
-            $sharedProject,
-            $sharedProject->getProject(),
-            $request,
-            $viewService,
-            $statisticsService,
-        );
+        return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
     }
 
-    #[Route(path: '/customer/{customer}/{shareKey}', name: 'view_shared_project_timesheets_customer', methods: ['GET', 'POST'])]
-    public function viewCustomerAction(
-        Customer $customer,
-        string $shareKey,
-        Request $request,
-        CustomerStatisticService $customerStatisticsService,
-        ProjectStatisticService $projectStatisticService,
-        ViewService $viewService,
-        SharedProjectTimesheetRepository $sharedProjectTimesheetRepository,
-    ): Response
+    #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}', name: 'customer_portal_deprecated_customer', methods: ['GET', 'POST'])]
+    #[Route(path: '/auth/customer-portal/c/{customer}/{shareKey}', name: 'view_shared_project_timesheets_customer', methods: ['GET', 'POST'])]
+    public function viewCustomerAction(Customer $customer, string $shareKey, Request $request, CustomerStatisticService $customerStatisticsService): Response
     {
         $givenPassword = $request->get('spt-password');
         $year = (int) $request->get('year', date('Y'));
         $month = (int) $request->get('month', date('m'));
         $detailsMode = $request->get('details', 'table');
-        $sharedProject = $sharedProjectTimesheetRepository->findByCustomerAndShareKey(
+        $sharedPortal = $this->sharedProjectTimesheetRepository->findByCustomerAndShareKey(
             $customer,
             $shareKey
         );
 
-        if ($sharedProject === null) {
+        if ($sharedPortal === null) {
             throw $this->createNotFoundException('Project not found');
         }
 
         // Check access.
-        if (!$viewService->hasAccess($sharedProject, $givenPassword)) {
+        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
             return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
-                'project' => $sharedProject->getCustomer(),
+                'project' => $sharedPortal->getCustomer(),
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
         }
 
         // Get time records.
-        $timeRecords = $viewService->getTimeRecords($sharedProject, $year, $month);
+        $timeRecords = $this->viewService->getTimeRecords($sharedPortal, $year, $month);
 
         // Calculate summary.
         $rateSum = 0;
@@ -107,26 +93,23 @@ class ViewController extends AbstractController
             $durationSum += $record->getDuration();
         }
 
-        // Define currency.
-        $currency = $customer->getCurrency();
-
         // Prepare stats for charts.
-        $annualChartVisible = $sharedProject->isAnnualChartVisible();
-        $monthlyChartVisible = $sharedProject->isMonthlyChartVisible();
+        $annualChartVisible = $sharedPortal->isAnnualChartVisible();
+        $monthlyChartVisible = $sharedPortal->isMonthlyChartVisible();
 
-        $statsPerMonth = $annualChartVisible ? $viewService->getAnnualStats($sharedProject, $year) : null;
+        $statsPerMonth = $annualChartVisible ? $this->viewService->getAnnualStats($sharedPortal, $year) : null;
         $statsPerDay = ($monthlyChartVisible && $detailsMode === 'chart')
-            ? $viewService->getMonthlyStats($sharedProject, $year, $month) : null;
+            ? $this->viewService->getMonthlyStats($sharedPortal, $year, $month) : null;
 
         // we cannot call $this->getDateTimeFactory() as it throws a AccessDeniedException for anonymous users
         $timezone = $customer->getTimezone() ?? date_default_timezone_get();
         $date = new \DateTimeImmutable('now', new \DateTimeZone($timezone));
         $stats = $customerStatisticsService->getBudgetStatisticModel($customer, $date);
-        $projects = $sharedProjectTimesheetRepository->getProjects($sharedProject);
-        $projectStats = $projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
+        $projects = $this->sharedProjectTimesheetRepository->getProjects($sharedPortal);
+        $projectStats = $this->projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
 
         return $this->render('@SharedProjectTimesheets/view/customer.html.twig', [
-            'sharedProject' => $sharedProject,
+            'sharedProject' => $sharedPortal,
             'customer' => $customer,
             'shareKey' => $shareKey,
             'timeRecords' => $timeRecords,
@@ -134,7 +117,7 @@ class ViewController extends AbstractController
             'durationSum' => $durationSum,
             'year' => $year,
             'month' => $month,
-            'currency' => $currency,
+            'currency' => $customer->getCurrency(),
             'statsPerMonth' => $statsPerMonth,
             'monthlyChartVisible' => $monthlyChartVisible,
             'statsPerDay' => $statsPerDay,
@@ -144,24 +127,17 @@ class ViewController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/customer/{customer}/{shareKey}/project/{project}', name: 'view_shared_project_timesheets_project', methods: ['GET', 'POST'])]
-    public function viewProjectAction(
-        Customer $customer,
-        string $shareKey,
-        Project $project,
-        Request $request,
-        ProjectStatisticService $statisticsService,
-        ViewService $viewService,
-        SharedProjectTimesheetRepository $sharedProjectTimesheetRepository,
-    ): Response
+    #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}/project/{project}', name: 'customer_portal_deprecated_customer_project', methods: ['GET', 'POST'])]
+    #[Route(path: '/auth/customer-portal/customer/{customer}/{shareKey}/project/{project}', name: 'view_shared_project_timesheets_project', methods: ['GET', 'POST'])]
+    public function viewCustomerProjectAction(Customer $customer, string $shareKey, Project $project, Request $request): Response
     {
         $givenPassword = $request->get('spt-password');
-        $sharedProject = $sharedProjectTimesheetRepository->findByCustomerAndShareKey(
+        $sharedPortal = $this->sharedProjectTimesheetRepository->findByCustomerAndShareKey(
             $customer,
             $shareKey
         );
 
-        if ($sharedProject === null) {
+        if ($sharedPortal === null) {
             throw $this->createNotFoundException('Project not found');
         }
 
@@ -170,34 +146,22 @@ class ViewController extends AbstractController
         }
 
         // Check access.
-        if (!$viewService->hasAccess($sharedProject, $givenPassword)) {
+        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
             return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
-                'project' => $sharedProject->getProject(),
+                'project' => $sharedPortal->getProject(),
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
         }
 
-        return $this->renderProjectView(
-            $sharedProject,
-            $project,
-            $request,
-            $viewService,
-            $statisticsService,
-        );
+        return $this->renderProjectView($sharedPortal, $project, $request);
     }
 
-    protected function renderProjectView(
-        SharedProjectTimesheet $sharedProject,
-        Project $project,
-        Request $request,
-        ViewService $viewService,
-        ProjectStatisticService $statisticsService,
-    ): Response
+    private function renderProjectView(SharedProjectTimesheet $sharedProject, Project $project, Request $request): Response
     {
         $year = (int) $request->get('year', date('Y'));
         $month = (int) $request->get('month', date('m'));
         $detailsMode = $request->get('details', 'table');
-        $timeRecords = $viewService->getTimeRecords($sharedProject, $year, $month, $project);
+        $timeRecords = $this->viewService->getTimeRecords($sharedProject, $year, $month, $project);
 
         // Calculate summary.
         $rateSum = 0;
@@ -208,25 +172,20 @@ class ViewController extends AbstractController
         }
 
         // Define currency.
-        $currency = 'EUR';
-        $customer = $project->getCustomer();
-
-        if ($customer !== null) {
-            $currency = $customer->getCurrency();
-        }
+        $currency = $project->getCustomer()?->getCurrency() ?? Customer::DEFAULT_CURRENCY;
 
         // Prepare stats for charts.
         $annualChartVisible = $sharedProject->isAnnualChartVisible();
         $monthlyChartVisible = $sharedProject->isMonthlyChartVisible();
-        $statsPerMonth = $annualChartVisible ? $viewService->getAnnualStats($sharedProject, $year, $project) : null;
+        $statsPerMonth = $annualChartVisible ? $this->viewService->getAnnualStats($sharedProject, $year, $project) : null;
         $statsPerDay = ($monthlyChartVisible && $detailsMode === 'chart')
-            ? $viewService->getMonthlyStats($sharedProject, $year, $month, $project) : null;
+            ? $this->viewService->getMonthlyStats($sharedProject, $year, $month, $project) : null;
 
         // we cannot call $this->getDateTimeFactory() as it throws a AccessDeniedException for anonymous users
         $timezone = $project->getCustomer()->getTimezone() ?? date_default_timezone_get();
         $date = new \DateTimeImmutable('now', new \DateTimeZone($timezone));
 
-        $stats = $statisticsService->getBudgetStatisticModel($project, $date);
+        $stats = $this->projectStatisticService->getBudgetStatisticModel($project, $date);
 
         return $this->render('@SharedProjectTimesheets/view/project.html.twig', [
             'sharedProject' => $sharedProject,
