@@ -59,7 +59,7 @@ class ManageController extends AbstractController
 
         $table->addColumn('actions', ['class' => 'actions alwaysVisible']);
 
-        $page = new PageSetup('shared_project_timesheets.manage.title');
+        $page = new PageSetup('shared_project_timesheets.title');
         $page->setActionName('shared_projects');
         $page->setDataTable($table);
 
