@@ -10,9 +10,9 @@
 
 namespace KimaiPlugin\SharedProjectTimesheetsBundle\Migrations;
 
+use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\Migrations\AbstractMigration;
 
 final class Version20240726082447 extends AbstractMigration
 {
