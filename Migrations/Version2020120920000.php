@@ -7,18 +7,18 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Migrations;
+namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
 
 final class Version2020120920000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add record merge mode to shared project timesheets';
+        return 'Add record merge mode for timesheets';
     }
 
     public function up(Schema $schema): void

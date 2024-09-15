@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Command;
+namespace KimaiPlugin\CustomerPortalBundle\Command;
 
 use App\Command\AbstractBundleInstallerCommand;
 
@@ -15,11 +15,11 @@ class InstallCommand extends AbstractBundleInstallerCommand
 {
     protected function getBundleCommandNamePart(): string
     {
-        return 'shared-project-timesheets';
+        return 'customer-portal';
     }
 
     protected function getMigrationConfigFilename(): ?string
     {
-        return __DIR__ . '/../Migrations/shared-project-timesheets.yaml';
+        return __DIR__ . '/../Migrations/customer-portal.yaml';
     }
 }

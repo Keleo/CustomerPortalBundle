@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Migrations;
+namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -17,7 +17,7 @@ final class Version2020122010000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add flags to enable charts of shared project timesheets';
+        return 'Add flags to enable charts';
     }
 
     public function up(Schema $schema): void

@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Repository;
+namespace KimaiPlugin\CustomerPortalBundle\Repository;
 
 use App\Entity\Customer;
 use App\Entity\Project;
@@ -18,7 +18,7 @@ use App\Repository\Query\ProjectQuery;
 use App\Utils\Pagination;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
 
 /**
  * @extends EntityRepository<SharedProjectTimesheet>

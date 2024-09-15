@@ -7,11 +7,11 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\EventSubscriber;
+namespace KimaiPlugin\CustomerPortalBundle\EventSubscriber;
 
 use App\Event\PageActionsEvent;
 use App\EventSubscriber\Actions\AbstractActionsSubscriber;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
 
 class SharedProjectSubscriber extends AbstractActionsSubscriber
 {

@@ -4,7 +4,7 @@ services:
         autoconfigure: true
         public: false
 
-    KimaiPlugin\SharedProjectTimesheetsBundle\:
+    KimaiPlugin\CustomerPortalBundle\:
         resource: '../../*'
         exclude:
             - '../../Entity/'
@@ -13,14 +13,14 @@ services:
             - '../../Resources/'
             - '../../tests/'
 
-    KimaiPlugin\SharedProjectTimesheetsBundle\Controller\:
+    KimaiPlugin\CustomerPortalBundle\Controller\:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    KimaiPlugin\SharedProjectTimesheetsBundle\Command\InstallCommand:
+    KimaiPlugin\CustomerPortalBundle\Command\InstallCommand:
         arguments: ['%kimai.plugin_dir%']
 
-    KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository:
+    KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository:
         class:     Doctrine\ORM\EntityRepository
         factory:   ['@doctrine.orm.entity_manager', getRepository]
-        arguments: ['KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet']
+        arguments: ['KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet']

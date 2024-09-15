@@ -1,9 +1,9 @@
 {
     "name": "keleo/customer-portal",
     "description": "Share timesheets and statistics via URLs",
-    "homepage": "https://github.com/Keleo/SharedProjectTimesheetsBundle",
+    "homepage": "https://www.kimai.org/store/customer-portal.html",
     "type": "kimai-plugin",
-    "version": "3.2.0",
+    "version": "4.0.0",
     "keywords": [
         "kimai",
         "kimai-plugin"
@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "KimaiPlugin\\SharedProjectTimesheetsBundle\\": ""
+            "KimaiPlugin\\CustomerPortalBundle\\": ""
         }
     },
     "config": {
@@ -46,9 +46,9 @@
     },
     "scripts": {
         "test": "phpunit tests/",
-        "codestyle-fix": "vendor/bin/php-cs-fixer fix",
-        "codestyle-check": "vendor/bin/php-cs-fixer fix --dry-run --verbose --using-cache=no --show-progress=none --format=checkstyle",
-        "phpstan": "vendor/bin/phpstan analyse . --configuration=phpstan.neon",
+        "codestyle-fix": "../../../vendor/bin/php-cs-fixer fix",
+        "codestyle-check": "../../../vendor/bin/php-cs-fixer fix --dry-run --verbose --using-cache=no --show-progress=none --format=checkstyle",
+        "phpstan": "../../../vendor/bin/phpstan analyse . --configuration=phpstan.neon",
         "linting": [
             "composer validate --strict --no-check-version",
             "@codestyle-check",

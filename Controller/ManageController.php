@@ -7,26 +7,26 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Controller;
+namespace KimaiPlugin\CustomerPortalBundle\Controller;
 
 use App\Controller\AbstractController;
 use App\Repository\Query\BaseQuery;
 use App\Utils\DataTable;
 use App\Utils\PageSetup;
 use InvalidArgumentException;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Form\SharedCustomerFormType;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Form\SharedProjectFormType;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ManageService;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Form\SharedCustomerFormType;
+use KimaiPlugin\CustomerPortalBundle\Form\SharedProjectFormType;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Service\ManageService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route(path: '/shared-project-timesheets')]
-#[IsGranted('shared_projects')]
+#[Route(path: '/customer-portal')]
+#[IsGranted('customer_portal')]
 class ManageController extends AbstractController
 {
     public function __construct(
@@ -59,10 +59,10 @@ class ManageController extends AbstractController
         $table->addColumn('actions', ['class' => 'actions alwaysVisible']);
 
         $page = new PageSetup('shared_project_timesheets.title');
-        $page->setActionName('shared_projects');
+        $page->setActionName('customer_portal');
         $page->setDataTable($table);
 
-        return $this->render('@SharedProjectTimesheets/manage/index.html.twig', [
+        return $this->render('@CustomerPortal/manage/index.html.twig', [
             'page_setup' => $page,
             'dataTable' => $table,
             'RecordMergeMode' => RecordMergeMode::getModes(),
@@ -101,7 +101,7 @@ class ManageController extends AbstractController
             }
         }
 
-        return $this->render('@SharedProjectTimesheets/manage/edit.html.twig', [
+        return $this->render('@CustomerPortal/manage/edit.html.twig', [
             'entity' => $sharedProject,
             'form' => $form->createView(),
         ]);
@@ -139,7 +139,7 @@ class ManageController extends AbstractController
             }
         }
 
-        return $this->render('@SharedProjectTimesheets/manage/edit.html.twig', [
+        return $this->render('@CustomerPortal/manage/edit.html.twig', [
             'entity' => $sharedProject,
             'form' => $form->createView(),
         ]);

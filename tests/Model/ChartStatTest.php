@@ -7,9 +7,9 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\tests\Model;
+namespace KimaiPlugin\CustomerPortalBundle\tests\Model;
 
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\ChartStat;
+use KimaiPlugin\CustomerPortalBundle\Model\ChartStat;
 use PHPUnit\Framework\TestCase;
 
 class ChartStatTest extends TestCase

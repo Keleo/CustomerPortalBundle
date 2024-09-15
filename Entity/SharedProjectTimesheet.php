@@ -7,13 +7,13 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Entity;
+namespace KimaiPlugin\CustomerPortalBundle\Entity;
 
 use App\Entity\Customer;
 use App\Entity\Project;
 use Doctrine\ORM\Mapping as ORM;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
 use LogicException;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;

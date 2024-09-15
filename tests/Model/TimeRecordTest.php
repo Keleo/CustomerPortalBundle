@@ -7,17 +7,17 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\tests\Model;
+namespace KimaiPlugin\CustomerPortalBundle\tests\Model;
 
 use App\Entity\Timesheet;
 use App\Entity\User;
 use DateTime;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\TimeRecord;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Model\TimeRecord;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \KimaiPlugin\SharedProjectTimesheetsBundle\Model\TimeRecord
+ * @covers \KimaiPlugin\CustomerPortalBundle\Model\TimeRecord
  */
 class TimeRecordTest extends TestCase
 {

@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Migrations;
+namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -20,7 +20,7 @@ final class Version20240726082447 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add nullable customer_id column and make project_id nullable';
+        return 'Allow to share complete customers';
     }
 
     public function up(Schema $schema): void

@@ -1,5 +1,5 @@
 controllers:
-    resource: '@SharedProjectTimesheetsBundle/Controller/'
+    resource: '@CustomerPortalBundle/Controller/'
     type: attribute
     prefix: /{_locale}
     requirements:

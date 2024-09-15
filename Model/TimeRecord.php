@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Model;
+namespace KimaiPlugin\CustomerPortalBundle\Model;
 
 use App\Entity\Project;
 use App\Entity\Timesheet;

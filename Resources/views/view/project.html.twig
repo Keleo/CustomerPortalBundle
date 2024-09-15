@@ -84,7 +84,7 @@
                     <h3 class="card-title">{{ 'shared_project_timesheets.view.chart.per_month_title' | trans({'%year%': year}) }}</h3>
                 </div>
                 <div class="card-body">
-                    {% include '@SharedProjectTimesheets/view/chart/annual-chart.html.twig' with {year: year, month: month, statsPerMonth: statsPerMonth} %}
+                    {% include '@CustomerPortal/view/chart/annual-chart.html.twig' with {year: year, month: month, statsPerMonth: statsPerMonth} %}
                 </div>
             </div>
         </div>
@@ -170,7 +170,7 @@
                     {% endif %}
                 </table>
             {% else %}
-                {% include '@SharedProjectTimesheets/view/chart/monthly-chart.html.twig' with {year: year, month: month, statsPerDay: statsPerDay} %}
+                {% include '@CustomerPortal/view/chart/monthly-chart.html.twig' with {year: year, month: month, statsPerDay: statsPerDay} %}
             {% endif %}
         </div>
     </div>

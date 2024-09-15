@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\DependencyInjection;
+namespace KimaiPlugin\CustomerPortalBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class SharedProjectTimesheetsExtension extends Extension implements PrependExtensionInterface
+class CustomerPortalExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -33,7 +33,7 @@ class SharedProjectTimesheetsExtension extends Extension implements PrependExten
             'permissions' => [
                 'roles' => [
                     'ROLE_SUPER_ADMIN' => [
-                        'shared_projects',
+                        'customer_portal',
                     ],
                 ],
             ],
@@ -41,7 +41,7 @@ class SharedProjectTimesheetsExtension extends Extension implements PrependExten
 
         $container->prependExtensionConfig('security', [
             'password_hashers' => [
-                'shared_projects' => 'auto',
+                'customer_portal' => 'auto',
             ],
         ]);
     }

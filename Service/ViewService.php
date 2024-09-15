@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Service;
+namespace KimaiPlugin\CustomerPortalBundle\Service;
 
 use App\Entity\Project;
 use App\Repository\Query\BaseQuery;
@@ -15,11 +15,11 @@ use App\Repository\Query\TimesheetQuery;
 use App\Repository\TimesheetRepository;
 use DateInterval;
 use DateTime;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\ChartStat;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\TimeRecord;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Model\ChartStat;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Model\TimeRecord;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
@@ -50,7 +50,7 @@ class ViewService
 
             if (!$this->request->getSession()->has($sessionPasswordKey)) {
                 // Check given password
-                if (empty($givenPassword) || !$this->passwordHasherFactory->getPasswordHasher('shared_projects')->verify($hashedPassword, $givenPassword)) {
+                if (empty($givenPassword) || !$this->passwordHasherFactory->getPasswordHasher('customer_portal')->verify($hashedPassword, $givenPassword)) {
                     return false;
                 }
 

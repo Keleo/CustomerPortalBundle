@@ -1,6 +1,6 @@
 {% extends 'datatable.html.twig' %}
 {% import "macros/widgets.html.twig" as widgets %}
-{% import "@SharedProjectTimesheets/manage/actions.html.twig" as actions %}
+{% import "@CustomerPortal/manage/actions.html.twig" as actions %}
 
 {% block datatable_row_attr %} class="modal-ajax-form open-edit" data-href="{{ url('update_shared_project_timesheets', {sharedProject: entry.id, shareKey: entry.shareKey}) }}"{% endblock %}
 

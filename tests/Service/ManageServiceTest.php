@@ -7,19 +7,19 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\tests\Service;
+namespace KimaiPlugin\CustomerPortalBundle\tests\Service;
 
 use App\Entity\Project;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ManageService;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Service\ManageService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 /**
- * @covers \KimaiPlugin\SharedProjectTimesheetsBundle\Service\ManageService
+ * @covers \KimaiPlugin\CustomerPortalBundle\Service\ManageService
  */
 class ManageServiceTest extends TestCase
 {

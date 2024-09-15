@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Migrations;
+namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

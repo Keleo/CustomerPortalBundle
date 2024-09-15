@@ -7,9 +7,9 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Form;
+namespace KimaiPlugin\CustomerPortalBundle\Form;
 
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
 
 class SharedCustomerFormType extends SharedProjectFormType
 {

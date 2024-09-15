@@ -7,13 +7,13 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\tests\Service;
+namespace KimaiPlugin\CustomerPortalBundle\tests\Service;
 
 use App\Entity\Project;
 use App\Repository\TimesheetRepository;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ViewService;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Service\ViewService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;

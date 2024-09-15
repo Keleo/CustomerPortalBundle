@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\EventSubscriber;
+namespace KimaiPlugin\CustomerPortalBundle\EventSubscriber;
 
 use App\Event\ConfigureMainMenuEvent;
 use App\Utils\MenuItemModel;
@@ -29,7 +29,7 @@ class MenuSubscriber implements EventSubscriberInterface
 
     public function onMenuConfigure(ConfigureMainMenuEvent $event): void
     {
-        if (!$this->security->isGranted('shared_projects')) {
+        if (!$this->security->isGranted('customer_portal')) {
             return;
         }
 

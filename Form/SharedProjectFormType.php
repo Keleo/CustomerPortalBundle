@@ -7,14 +7,14 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Form;
+namespace KimaiPlugin\CustomerPortalBundle\Form;
 
 use App\Form\Type\CustomerType;
 use App\Form\Type\ProjectType;
 use App\Form\Type\YesNoType;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ManageService;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Service\ManageService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

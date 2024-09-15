@@ -7,9 +7,9 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\tests\Model;
+namespace KimaiPlugin\CustomerPortalBundle\tests\Model;
 
-use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
 use PHPUnit\Framework\TestCase;
 
 class RecordMergeModeTest extends TestCase

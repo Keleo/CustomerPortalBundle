@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Model;
+namespace KimaiPlugin\CustomerPortalBundle\Model;
 
 class ChartStat
 {

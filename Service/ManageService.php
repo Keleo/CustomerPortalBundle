@@ -7,10 +7,10 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Service;
+namespace KimaiPlugin\CustomerPortalBundle\Service;
 
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class ManageService
@@ -55,7 +55,7 @@ class ManageService
 
         if ($newPassword !== self::PASSWORD_DO_NOT_CHANGE_VALUE) {
             if (!empty($newPassword)) {
-                $encodedPassword = $this->passwordHasherFactory->getPasswordHasher('shared_projects')->hash($newPassword);
+                $encodedPassword = $this->passwordHasherFactory->getPasswordHasher('customer_portal')->hash($newPassword);
                 $sharedProjectTimesheet->setPassword($encodedPassword);
             } else {
                 $sharedProjectTimesheet->setPassword(null);

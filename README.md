@@ -3,7 +3,7 @@
 You can share your customer and project report (budgets, timesheets) with anyone by a public URL and optional password.
 
 Features, documentation and installation instructions at:   
-https://www.kimai.org/store/vettersolutions-shared-project-timesheets-bundle.html
+https://www.kimai.org/store/customer-portal.html
 
 ## Changelog
 

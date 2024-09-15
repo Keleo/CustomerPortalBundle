@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Migrations;
+namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -19,7 +19,7 @@ final class Version2020120600000 extends AbstractMigration
 
     public function getDescription(): string
     {
-        return 'Create table for shared project timesheets';
+        return 'Initial table structure for the Customer Portal';
     }
 
     public function up(Schema $schema): void

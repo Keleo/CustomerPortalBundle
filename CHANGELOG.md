@@ -1,3 +1,15 @@
+## Version 4.0.0
+
+Compatibility: requires minimum Kimai 2.21.0
+
+**ATTENTION: This release is not backwards compatible with previous versions!**
+
+You need to remove the directory var/plugins/SharedProjectTimesheetsBundle and reload the cache before installing this version.
+
+- Refactored entire codebase to the name "CustomerPortalBundle"
+- Renamed all routes to "customer-portal"
+- Installation command changed to "kimai:bundle:customer-portal:install"
+
 ## Version 3.2.0
 
 Compatibility: requires minimum Kimai 2.21.0

@@ -7,11 +7,11 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle;
+namespace KimaiPlugin\CustomerPortalBundle;
 
 use App\Plugin\PluginInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class SharedProjectTimesheetsBundle extends Bundle implements PluginInterface
+class CustomerPortalBundle extends Bundle implements PluginInterface
 {
 }

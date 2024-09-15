@@ -7,16 +7,16 @@
  * that was distributed with this source code.
  */
 
-namespace KimaiPlugin\SharedProjectTimesheetsBundle\Controller;
+namespace KimaiPlugin\CustomerPortalBundle\Controller;
 
 use App\Controller\AbstractController;
 use App\Customer\CustomerStatisticService;
 use App\Entity\Customer;
 use App\Entity\Project;
 use App\Project\ProjectStatisticService;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
-use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ViewService;
+use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
+use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
+use KimaiPlugin\CustomerPortalBundle\Service\ViewService;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +40,7 @@ class ViewController extends AbstractController
 
         // Check access.
         if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
-            return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
+            return $this->render('@CustomerPortal/view/auth.html.twig', [
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
         }
@@ -63,7 +63,7 @@ class ViewController extends AbstractController
         }
 
         if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
-            return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
+            return $this->render('@CustomerPortal/view/auth.html.twig', [
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
         }
@@ -117,7 +117,7 @@ class ViewController extends AbstractController
         $projects = $this->sharedProjectTimesheetRepository->getProjects($sharedPortal);
         $projectStats = $this->projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
 
-        return $this->render('@SharedProjectTimesheets/view/customer.html.twig', [
+        return $this->render('@CustomerPortal/view/customer.html.twig', [
             'sharedProject' => $sharedPortal,
             'customer' => $customer,
             'shareKey' => $sharedPortal->getShareKey(),
@@ -167,7 +167,7 @@ class ViewController extends AbstractController
 
         $stats = $this->projectStatisticService->getBudgetStatisticModel($project, $date);
 
-        return $this->render('@SharedProjectTimesheets/view/project.html.twig', [
+        return $this->render('@CustomerPortal/view/project.html.twig', [
             'sharedProject' => $sharedProject,
             'timeRecords' => $timeRecords,
             'rateSum' => $rateSum,
