@@ -23,7 +23,6 @@ use KimaiPlugin\SharedProjectTimesheetsBundle\Model\TimeRecord;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class ViewService
 {
@@ -34,11 +33,6 @@ class ViewService
         private readonly SharedProjectTimesheetRepository $sharedTimesheetRepository,
     )
     {
-    }
-
-    private function getPasswordHasher(): PasswordHasherInterface
-    {
-        return $this->passwordHasherFactory->getPasswordHasher('shared_projects');
     }
 
     /**
@@ -57,7 +51,7 @@ class ViewService
 
             if (!$this->request->getSession()->has($sessionPasswordKey)) {
                 // Check given password
-                if (empty($givenPassword) || !$this->getPasswordHasher()->verify($hashedPassword, $givenPassword)) {
+                if (empty($givenPassword) || !$this->passwordHasherFactory->getPasswordHasher('shared_projects')->verify($hashedPassword, $givenPassword)) {
                     return false;
                 }
 
@@ -70,14 +64,8 @@ class ViewService
 
     /**
      * Delivers time records for the given shared project timesheet and time span.
-     * @param SharedProjectTimesheet $sharedProject
-     * @param int $year
-     * @param int $month
-     * @param Project|null $limitProject limit to this project
-     * @return TimeRecord[]
-     * @throws \Exception
      *
-     * @todo Unit test
+     * @return TimeRecord[]
      */
     public function getTimeRecords(SharedProjectTimesheet $sharedProject, int $year, int $month, ?Project $limitProject = null): array
     {
@@ -147,12 +135,8 @@ class ViewService
 
     /**
      * Delivers stats for the given year (e.g. duration per month).
-     * @param SharedProjectTimesheet $sharedProject
-     * @param int $year
-     * @param Project|null $limitProject limit to this project
-     * @return ChartStat[] stats per month, one-based index (1 - 12)
      *
-     * @todo Unit test
+     * @return ChartStat[] stats per month, one-based index (1 - 12)
      */
     public function getAnnualStats(SharedProjectTimesheet $sharedProject, int $year, ?Project $limitProject = null): array
     {
@@ -213,13 +197,8 @@ class ViewService
 
     /**
      * Delivers stats for the given month (e.g. duration per day).
-     * @param SharedProjectTimesheet $sharedProject
-     * @param int $year
-     * @param int $month
-     * @param Project|null $limitProject limit to this project
-     * @return ChartStat[] stats per day
      *
-     * @todo Unit test
+     * @return ChartStat[] stats per day
      */
     public function getMonthlyStats(SharedProjectTimesheet $sharedProject, int $year, int $month, ?Project $limitProject = null): array
     {
