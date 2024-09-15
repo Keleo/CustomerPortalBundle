@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Model\RecordMergeMode;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
 use LogicException;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: 'kimai2_shared_project_timesheets')]
@@ -25,6 +26,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(columns: ['customer_id', 'project_id', 'share_key'])]
 #[ORM\Entity(repositoryClass: SharedProjectTimesheetRepository::class)]
 #[ORM\UniqueConstraint(columns: ['customer_id', 'project_id', 'share_key'])]
+#[ORM\UniqueConstraint(columns: ['share_key'])]
+#[UniqueEntity(fields: ['shareKey'])]
 class SharedProjectTimesheet
 {
     public const TYPE_PROJECT = 'project';
