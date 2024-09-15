@@ -1,19 +1,8 @@
 shared_project_timesheets:
-    menu:
-        title: Shared project timesheets
+    title: Customer portal
 
     manage:
-        title: Shared project timesheets
-        open: Open
-        copy: Copy
-        copied: Copied
-        create_link_label: Create an entry to share your project timesheets
-        create:
-            subtitle: Create entry
-        update:
-            subtitle: Edit entry
         form:
-            project: Project
             record_merge_mode: Merge records of one day
             password_hint: Leave empty to set no password
             table_options: Timesheet table options
@@ -26,39 +15,20 @@ shared_project_timesheets:
             budget_stats_visible: Budget statistics visible
             time_budget_stats_visible: Time budget statistics visible
         table:
-            name: Project name
-            url: Link
-            password: Password protection
             record_merge_mode: Merge records
             entry_user_visible: Entry user visible
             entry_rate_visible: Entry rate visible
             annual_chart_visible: Annual chart visible
             monthly_chart_visible: Monthly chart visible
-        persist:
-            success: Saved successfully.
-            error: An error occurred. Please try again.
 
     view:
-        title: "Project:"
-        subtitle: "- shared project timesheets"
-        selection_title: Month selection
         table:
             title: Details
-            date: Date
-            description: Description
             empty: No entries available for this month
-            user: User
             rate_hour: Hour rate
             rate_total: Total rate
-        auth:
-            title: Access control for project
-            description: To get access to this projects time records, please enter the required password.
-            password_label: "Enter password:"
-            send: Send
-            invalid_password: Invalid password
         error:
             title: An error occurred
-            access_denied: Access denied.
         chart:
             per_month_title: Hours per month in %year%
         details:

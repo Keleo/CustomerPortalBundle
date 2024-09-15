@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MenuSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private AuthorizationCheckerInterface $security)
+    public function __construct(private readonly AuthorizationCheckerInterface $security)
     {
     }
 
@@ -35,7 +35,7 @@ class MenuSubscriber implements EventSubscriberInterface
         }
 
         $event->getAppsMenu()->addChild(
-            new MenuItemModel('manage_shared_project_timesheets', 'shared_project_timesheets.menu.title', 'manage_shared_project_timesheets', [], 'fas fa-receipt')
+            new MenuItemModel('manage_shared_project_timesheets', 'shared_project_timesheets.title', 'manage_shared_project_timesheets', [], 'fas fa-receipt')
         );
     }
 }

@@ -1,19 +1,8 @@
 shared_project_timesheets:
-    menu:
-        title: Geteilte Projektzeiten
+    title: Kunden Portal
 
     manage:
-        title: Geteilte Projektzeiten
-        open: Öffnen
-        copy: Kopieren
-        copied: Kopiert
-        create_link_label: Fügen Sie einen Eintrag hinzu, um Projektzeiten zu teilen
-        create:
-            subtitle: Eintrag hinzufügen
-        update:
-            subtitle: Eintrag bearbeiten
         form:
-            project: Projekt
             record_merge_mode: Zeiten eines Tages zusammenführen
             password_hint: Feld leer lassen um kein Passwort festzulegen
             table_options: Detailtabelle - Optionen
@@ -26,39 +15,20 @@ shared_project_timesheets:
             budget_stats_visible: Budgetstatistiken sichtbar
             time_budget_stats_visible: Zeitbudgetstatistiken sichtbar
         table:
-            name: Name des Projekts
-            url: Link
-            password: Passwortgeschützt
             record_merge_mode: Zeiten zusammenführen
             entry_user_visible: Benutzer sichtbar
             entry_rate_visible: Kosten sichtbar
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
-        persist:
-            success: Erfolgreich gespeichert.
-            error: Speichern fehlgeschlagen. Bitte versuchen Sie es erneut.
 
     view:
-        title: "Projekt:"
-        subtitle: "- geteilte Projektzeiten"
-        selection_title: Monat auswählen
         table:
             title: Details
-            date: Datum
-            description: Beschreibung
             empty: Keine Einträge verfügbar für diesen Monat
-            user: Benutzer
             rate_hour: Stundenlohn
             rate_total: Lohn gesamt
-        auth:
-            title: Zugangskontrolle für das Projekt
-            description: Um Zugang zu den Projektzeiten zu erhalten, geben Sie bitte das benötigte Passwort ein.
-            password_label: "Passwort eingeben:"
-            send: Senden
-            invalid_password: Ungültiges Passwort
         error:
             title: Ein Fehler ist aufgetreten
-            access_denied: Zugriff verweigert.
         chart:
             per_month_title: Stunden pro Monat im Jahr %year%
         details:

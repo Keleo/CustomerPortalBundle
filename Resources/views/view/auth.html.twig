@@ -3,16 +3,15 @@
 {% block page_content %}
     <div class="container container-tight py-4">
         <div class="text-center mb-4">
-            <h1>{{ 'shared_project_timesheets.view.auth.title' | trans }} <br> {{ project.name }}</h1>
+            <h1>{{ 'security.unlock.button' | trans }}</h1>
         </div>
 
         <div class="card card-md">
             <div class="card-body">
                 <form action="{{ app.request.uri }}" method="POST">
                     {% if invalidPassword %}
-                        <div class="alert alert-danger">{{ 'shared_project_timesheets.view.auth.invalid_password' | trans }}</div>
+                        <div class="alert alert-important alert-danger">{{ 'Invalid credentials.' | trans({}, 'security') }}</div>
                     {% endif %}
-                    <p>{{ 'shared_project_timesheets.view.auth.description' | trans }}</p>
 
                     <div class="mb-3">
                         <input type="text" id="spt-password" name="spt-password" class="form-control" placeholder="{{ 'password' | trans }}" required="required">

@@ -2,7 +2,8 @@
 
 Compatibility: requires minimum Kimai 2.21.0
 
-- Fix dropdowns (#5)
+- Rename to "Customer portal"
+- Re-use many translations from Core
 - Feature: added configuration to toggle financial- and time budget statistics (#6)
 - Feature: allow to share an entire customer (#7)
 - Feature: add details button and stats in project listing on shared customer page (#8)

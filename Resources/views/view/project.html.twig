@@ -1,7 +1,7 @@
 {% extends '@theme/fullpage.html.twig' %}
 {% from "macros/widgets.html.twig" import nothing_found %}
 
-{% block title %}{{ 'shared_project_timesheets.view.title' | trans }} {{ project.name }}{% endblock %}
+{% block title %}{{ 'project' | trans }} {{ project.name }}{% endblock %}
 
 {% block stylesheets %}
     {% if tabler_bundle.isRightToLeft() %}
@@ -112,11 +112,11 @@
                 <table class="table table-vcenter table-hover dataTable">
                     <thead>
                         <tr>
-                            <th class="w-min">{{ 'shared_project_timesheets.view.table.date' | trans }}</th>
+                            <th class="w-min">{{ 'date' | trans }}</th>
                             {% if sharedProject.entryUserVisible %}
-                            <th>{{ 'shared_project_timesheets.view.table.user' | trans }}</th>
+                            <th>{{ 'user' | trans }}</th>
                             {% endif %}
-                            <th>{{ 'shared_project_timesheets.view.table.description' | trans }}</th>
+                            <th>{{ 'description' | trans }}</th>
                             <th class="w-min">{{ 'duration'|trans }}</th>
                             {% if sharedProject.entryRateVisible %}
                             <th class="w-min">{{ 'hourlyRate' | trans }}</th>
