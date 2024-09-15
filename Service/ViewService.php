@@ -28,10 +28,10 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 class ViewService
 {
     public function __construct(
-        private TimesheetRepository $timesheetRepository,
-        private RequestStack $request,
-        private PasswordHasherFactoryInterface $passwordHasherFactory,
-        private SharedProjectTimesheetRepository $sharedTimesheetRepository,
+        private readonly TimesheetRepository $timesheetRepository,
+        private readonly RequestStack $request,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly SharedProjectTimesheetRepository $sharedTimesheetRepository,
     )
     {
     }

@@ -31,8 +31,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ManageController extends AbstractController
 {
     public function __construct(
-        private SharedProjectTimesheetRepository $shareProjectTimesheetRepository,
-        private ManageService $manageService
+        private readonly SharedProjectTimesheetRepository $shareProjectTimesheetRepository,
+        private readonly ManageService $manageService
     ) {
     }
 

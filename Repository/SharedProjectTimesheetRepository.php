@@ -91,7 +91,6 @@ class SharedProjectTimesheetRepository extends EntityRepository
     }
 
     /**
-     * @param SharedProjectTimesheet $sharedProject
      * @return Project[]
      */
     public function getProjects(SharedProjectTimesheet $sharedProject): array
@@ -103,6 +102,6 @@ class SharedProjectTimesheetRepository extends EntityRepository
         /** @var \App\Repository\ProjectRepository $projectRepository */
         $projectRepository = $this->_em->getRepository(Project::class);
 
-        return (array) $projectRepository->getProjectsForQuery((new ProjectQuery())->setCustomers([$sharedProject->getCustomer()]));
+        return $projectRepository->getProjectsForQuery((new ProjectQuery())->setCustomers([$sharedProject->getCustomer()]));
     }
 }
