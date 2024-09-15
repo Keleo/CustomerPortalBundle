@@ -1,6 +1,6 @@
 {
-    "name": "dexterity42/shared-project-timesheets",
-    "description": "Share project timesheets with anyone",
+    "name": "keleo/customer-portal",
+    "description": "Share timesheets and statistics via URLs",
     "homepage": "https://github.com/Keleo/SharedProjectTimesheetsBundle",
     "type": "kimai-plugin",
     "version": "3.2.0",
@@ -23,7 +23,7 @@
     "extra": {
         "kimai": {
             "require": 22100,
-            "name": "Shared-Projects"
+            "name": "Customer Portal"
         }
     },
     "autoload": {
