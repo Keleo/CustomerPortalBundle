@@ -26,6 +26,23 @@ class TimeRecord
         RecordMergeMode::MODE_MERGE_USE_LAST_OF_DAY,
     ];
 
+    private ?string $description = null;
+    /**
+     * @var array<array{'hourlyRate': float, 'duration': int}>
+     */
+    private array $hourlyRates = [];
+    private float $rate = 0.0;
+    private int $duration = 0;
+    private ?Project $project = null;
+
+    private function __construct(
+        private readonly \DateTimeInterface $date,
+        private readonly User $user,
+        private readonly string $mergeMode
+    )
+    {
+    }
+
     public static function fromTimesheet(Timesheet $timesheet, string $mergeMode = RecordMergeMode::MODE_MERGE): TimeRecord
     {
         if (!\in_array($mergeMode, self::VALID_MERGE_MODES)) {
@@ -42,25 +59,6 @@ class TimeRecord
         return $record;
     }
 
-    private ?\DateTimeInterface $date = null;
-    private ?string $description = null;
-    /**
-     * @var array<array{'hourlyRate': float, 'duration': int}>>
-     */
-    private array $hourlyRates = [];
-    private float $rate = 0.0;
-    private int $duration = 0;
-    private ?User $user = null;
-    private ?string $mergeMode = null;
-    private ?Project $project = null;
-
-    private function __construct(\DateTimeInterface $date, User $user, string $mergeMode)
-    {
-        $this->date = $date;
-        $this->user = $user;
-        $this->mergeMode = $mergeMode;
-    }
-
     public function getDate(): \DateTimeInterface
     {
         return $this->date;
@@ -72,7 +70,7 @@ class TimeRecord
     }
 
     /**
-     * @return array<array{'hourlyRate': float, 'duration': int}>>
+     * @return array<array{'hourlyRate': float, 'duration': int}>
      */
     public function getHourlyRates(): array
     {

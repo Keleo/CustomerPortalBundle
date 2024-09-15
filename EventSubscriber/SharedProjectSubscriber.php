@@ -25,7 +25,7 @@ class SharedProjectSubscriber extends AbstractActionsSubscriber
     {
         $payload = $event->getPayload();
 
-        if (!\is_array($payload) || !\array_key_exists('sharedProject', $payload)) {
+        if (!\array_key_exists('sharedProject', $payload)) {
             return;
         }
 

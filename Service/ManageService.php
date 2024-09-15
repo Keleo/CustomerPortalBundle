@@ -10,8 +10,6 @@
 
 namespace KimaiPlugin\SharedProjectTimesheetsBundle\Service;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -21,7 +19,10 @@ class ManageService
 {
     public const PASSWORD_DO_NOT_CHANGE_VALUE = '__DO_NOT_CHANGE__';
 
-    public function __construct(private SharedProjectTimesheetRepository $sharedProjectTimesheetRepository, private PasswordHasherFactoryInterface $passwordHasherFactory)
+    public function __construct(
+        private readonly SharedProjectTimesheetRepository $sharedProjectTimesheetRepository,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory
+    )
     {
     }
 
@@ -30,12 +31,6 @@ class ManageService
         return $this->passwordHasherFactory->getPasswordHasher('shared_projects');
     }
 
-    /**
-     * @param SharedProjectTimesheet $sharedProjectTimesheet
-     * @param string|null $password
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function create(SharedProjectTimesheet $sharedProjectTimesheet, ?string $password = null): SharedProjectTimesheet
     {
         // Set share key
@@ -62,12 +57,6 @@ class ManageService
         return $this->update($sharedProjectTimesheet, $password);
     }
 
-    /**
-     * @param SharedProjectTimesheet $sharedProjectTimesheet
-     * @param string|null $newPassword
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function update(SharedProjectTimesheet $sharedProjectTimesheet, ?string $newPassword = null): SharedProjectTimesheet
     {
         // Check if updatable
@@ -76,7 +65,7 @@ class ManageService
         }
 
         // Handle password
-        $currentHashedPassword = $sharedProjectTimesheet !== null && !empty($sharedProjectTimesheet->getPassword()) ? $sharedProjectTimesheet->getPassword() : null;
+        $currentHashedPassword = !empty($sharedProjectTimesheet->getPassword()) ? $sharedProjectTimesheet->getPassword() : null;
 
         if ($newPassword !== self::PASSWORD_DO_NOT_CHANGE_VALUE) {
             if (!empty($newPassword)) {
@@ -98,7 +87,6 @@ class ManageService
 
     /**
      * @see https://www.php.net/manual/en/function.uniqid.php#94959
-     * @return string
      */
     private function getUuidV4(): string
     {
