@@ -110,7 +110,7 @@ class ViewService
                 }
             } else {
                 // One user can be assigned to multiple records per day
-                $time = $timesheet->getBegin()->format('H-i-s');
+                $time = $timesheet->getBegin()->format('H-i-s') . $timesheet->getId();
                 $timeRecords[$dateKey][$userKey][$time] = TimeRecord::fromTimesheet($timesheet);
             }
         }

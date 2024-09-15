@@ -10,6 +10,7 @@ Compatibility: requires minimum Kimai 2.21.0
 - Add details button and stats in project listing on shared customer page (#8)
 - Use translations from core, use latest repository features
 - Use password field for login
+- Fixes missing timesheet if user and start time is the same (#1)
 
 ## Version 3.1.0
 
