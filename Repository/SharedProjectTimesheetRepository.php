@@ -17,7 +17,6 @@ use App\Repository\Query\BaseQuery;
 use App\Repository\Query\ProjectQuery;
 use App\Utils\Pagination;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
 
@@ -54,40 +53,39 @@ class SharedProjectTimesheetRepository extends EntityRepository
         $em->flush();
     }
 
+    public function findBySharedProjectTimesheet(SharedProjectTimesheet $sharedProjectTimesheet): ?SharedProjectTimesheet
+    {
+        if ($sharedProjectTimesheet->isCustomerSharing()) {
+            return $this->findByCustomerAndShareKey($sharedProjectTimesheet->getCustomer(), $sharedProjectTimesheet->getShareKey());
+        } else {
+            return $this->findByProjectAndShareKey($sharedProjectTimesheet->getProject(), $sharedProjectTimesheet->getShareKey());
+        }
+    }
+
     public function findByProjectAndShareKey(Project|int|null $project, ?string $shareKey): ?SharedProjectTimesheet
     {
-        try {
-            return $this->createQueryBuilder('spt')
-                ->where('spt.project = :project')
-                ->andWhere('spt.customer is null')
-                ->andWhere('spt.shareKey = :shareKey')
-                ->setMaxResults(1)
-                ->setParameter('project', $project)
-                ->setParameter('shareKey', $shareKey)
-                ->getQuery()
-                ->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            // We can ignore that as we have a unique database key for project/customer/shareKey
-            return null;
-        }
+        return $this->createQueryBuilder('spt')
+            ->where('spt.project = :project')
+            ->andWhere('spt.customer is null')
+            ->andWhere('spt.shareKey = :shareKey')
+            ->setMaxResults(1)
+            ->setParameter('project', $project)
+            ->setParameter('shareKey', $shareKey)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function findByCustomerAndShareKey(Customer|int $customer, ?string $shareKey): ?SharedProjectTimesheet
     {
-        try {
-            return $this->createQueryBuilder('spt')
-                ->where('spt.project is null')
-                ->andWhere('spt.customer = :customer')
-                ->andWhere('spt.shareKey = :shareKey')
-                ->setMaxResults(1)
-                ->setParameter('customer', $customer)
-                ->setParameter('shareKey', $shareKey)
-                ->getQuery()
-                ->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            // We can ignore that as we have a unique database key for project/customer/shareKey
-            return null;
-        }
+        return $this->createQueryBuilder('spt')
+            ->where('spt.project is null')
+            ->andWhere('spt.customer = :customer')
+            ->andWhere('spt.shareKey = :shareKey')
+            ->setMaxResults(1)
+            ->setParameter('customer', $customer)
+            ->setParameter('shareKey', $shareKey)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

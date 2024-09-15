@@ -20,7 +20,7 @@ class ManageService
     public const PASSWORD_DO_NOT_CHANGE_VALUE = '__DO_NOT_CHANGE__';
 
     public function __construct(
-        private readonly SharedProjectTimesheetRepository $sharedProjectTimesheetRepository,
+        private readonly SharedProjectTimesheetRepository $repository,
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory
     )
     {
@@ -40,17 +40,7 @@ class ManageService
                     substr(preg_replace('/[^A-Za-z0-9]+/', '', $this->getUuidV4()), 0, 12)
                 );
 
-                if ($sharedProjectTimesheet->isCustomerSharing()) {
-                    $existingEntry = $this->sharedProjectTimesheetRepository->findByCustomerAndShareKey(
-                        $sharedProjectTimesheet->getCustomer(),
-                        $sharedProjectTimesheet->getShareKey()
-                    );
-                } else {
-                    $existingEntry = $this->sharedProjectTimesheetRepository->findByProjectAndShareKey(
-                        $sharedProjectTimesheet->getProject(),
-                        $sharedProjectTimesheet->getShareKey()
-                    );
-                }
+                $existingEntry = $this->repository->findBySharedProjectTimesheet($sharedProjectTimesheet);
             } while ($existingEntry !== null);
         }
 
@@ -80,7 +70,7 @@ class ManageService
             $sharedProjectTimesheet->setPassword($currentHashedPassword);
         }
 
-        $this->sharedProjectTimesheetRepository->save($sharedProjectTimesheet);
+        $this->repository->save($sharedProjectTimesheet);
 
         return $sharedProjectTimesheet;
     }
