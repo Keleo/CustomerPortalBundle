@@ -13,7 +13,6 @@ namespace KimaiPlugin\SharedProjectTimesheetsBundle\Service;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class ManageService
 {
@@ -26,25 +25,23 @@ class ManageService
     {
     }
 
-    private function getPasswordHasher(): PasswordHasherInterface
+    public function create(SharedProjectTimesheet $sharedPortal, ?string $password = null): SharedProjectTimesheet
     {
-        return $this->passwordHasherFactory->getPasswordHasher('shared_projects');
-    }
-
-    public function create(SharedProjectTimesheet $sharedProjectTimesheet, ?string $password = null): SharedProjectTimesheet
-    {
-        // Set share key
-        if ($sharedProjectTimesheet->getShareKey() === null) {
+        if ($sharedPortal->getShareKey() === null) {
+            $i = 0;
             do {
-                $sharedProjectTimesheet->setShareKey(
-                    substr(preg_replace('/[^A-Za-z0-9]+/', '', $this->getUuidV4()), 0, 12)
-                );
+                $newKey = substr(preg_replace('/[^A-Za-z0-9]+/', '', $this->getUuidV4()), 0, 20);
+                $existingEntry = $this->repository->findByShareKey($newKey);
 
-                $existingEntry = $this->repository->findBySharedProjectTimesheet($sharedProjectTimesheet);
+                // make sure we exit in case we cannot generate a new key
+                if ($i++ > 50 && $existingEntry !== null) {
+                    throw new \RuntimeException('Could not create unique share key');
+                }
             } while ($existingEntry !== null);
+            $sharedPortal->setShareKey($newKey);
         }
 
-        return $this->update($sharedProjectTimesheet, $password);
+        return $this->update($sharedPortal, $password);
     }
 
     public function update(SharedProjectTimesheet $sharedProjectTimesheet, ?string $newPassword = null): SharedProjectTimesheet
@@ -59,11 +56,9 @@ class ManageService
 
         if ($newPassword !== self::PASSWORD_DO_NOT_CHANGE_VALUE) {
             if (!empty($newPassword)) {
-                // Change password
-                $encodedPassword = $this->getPasswordHasher()->hash($newPassword);
+                $encodedPassword = $this->passwordHasherFactory->getPasswordHasher('shared_projects')->hash($newPassword);
                 $sharedProjectTimesheet->setPassword($encodedPassword);
             } else {
-                // Reset password if exists
                 $sharedProjectTimesheet->setPassword(null);
             }
         } else {

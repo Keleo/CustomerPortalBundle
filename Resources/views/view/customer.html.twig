@@ -25,6 +25,8 @@
 {% block page_classes %}page{% endblock %}
 
 {% block page_content %}
+{% set show_progress = (stats.hasBudget() and sharedProject.isBudgetStatsVisible()) or (stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible()) %}
+{% set show_month_stats = statsPerMonth is not null %}
 <div class="p-4">
 
     <h2 class="page-title mb-3">
@@ -71,10 +73,10 @@
             </a>
         </div>
 
-        <span class="ps-2">{{ sharedProject.customer.name }}</span>
+        <span class="ps-2">{{ customer.name }}</span>
     </h2>
 
-    {% if statsPerMonth is not null %}
+    {% if show_month_stats %}
     <div class="row mb-3">
         <div class="col-md-12">
             <div class="card">
@@ -95,10 +97,10 @@
             {% if monthlyChartVisible %}
                 <div class="card-actions">
                     <div class="btn-group">
-                        <a href="{{ url('view_shared_project_timesheets_customer', {'customer': sharedProject.customer.id, 'shareKey': sharedProject.shareKey}) }}?year={{ year }}&month={{ month }}" class="btn btn-default btn-icon">
+                        <a href="{{ url('customer_portal_view', {'shareKey': sharedProject.shareKey}) }}?year={{ year }}&month={{ month }}" class="btn btn-default btn-icon">
                             <i class="fas fa-table"></i>
                         </a>
-                        <a href="{{ url('view_shared_project_timesheets_customer', {'customer': sharedProject.customer.id, 'shareKey': sharedProject.shareKey}) }}?year={{ year }}&month={{ month }}&details=chart" class="btn btn-default btn-icon">
+                        <a href="{{ url('customer_portal_view', {'shareKey': sharedProject.shareKey}) }}?year={{ year }}&month={{ month }}&details=chart" class="btn btn-default btn-icon">
                             <i class="fas fa-chart-bar"></i>
                         </a>
                     </div>
@@ -176,7 +178,7 @@
         </div>
     </div>
 
-    {% if ((stats.hasBudget() and sharedProject.isBudgetStatsVisible()) or (stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible())) %}
+    {% if show_progress %}
         {% import "macros/progressbar.html.twig" as progress %}
         <div class="card mb-3">
             <div class="card-body p-0">
@@ -227,8 +229,7 @@
                     {% for stats in projectStats %}
                         {% set project = stats.getProject() %}
                         {%
-                            set project_url = url('view_shared_project_timesheets_project', {
-                                'customer': customer.getId(),
+                            set project_url = url('customer_portal_project', {
                                 'shareKey': shareKey,
                                 'project': project.getId(),
                             })

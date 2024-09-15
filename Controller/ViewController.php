@@ -18,6 +18,7 @@ use App\Project\ProjectStatisticService;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Entity\SharedProjectTimesheet;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Repository\SharedProjectTimesheetRepository;
 use KimaiPlugin\SharedProjectTimesheetsBundle\Service\ViewService;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,61 +27,70 @@ class ViewController extends AbstractController
 {
     public function __construct(
         private readonly ProjectStatisticService $projectStatisticService,
+        private readonly CustomerStatisticService $customerStatisticsService,
         private readonly ViewService $viewService,
         private readonly SharedProjectTimesheetRepository $sharedProjectTimesheetRepository
     ) {
     }
 
-    #[Route(path: '/auth/shared-project-timesheets/{project}/{shareKey}', name: 'customer_portal_deprecated_project', methods: ['GET', 'POST'])]
-    #[Route(path: '/auth/customer-portal/p/{project}/{shareKey}', name: 'view_shared_project_timesheets', methods: ['GET', 'POST'])]
-    public function indexAction(Project $project, string $shareKey, Request $request): Response
+    #[Route(path: '/auth/shared-project-timesheets/{project}/{shareKey}', methods: ['GET', 'POST'])]
+    #[Route(path: '/auth/customer-portal/{shareKey}', name: 'customer_portal_view', methods: ['GET', 'POST'])]
+    public function indexAction(#[MapEntity(mapping: ['shareKey' => 'shareKey'])] SharedProjectTimesheet $sharedPortal, Request $request): Response
     {
         $givenPassword = $request->get('spt-password');
-
-        $sharedPortal = $this->sharedProjectTimesheetRepository->findByProjectAndShareKey(
-            $project->getId(),
-            $shareKey
-        );
-
-        if ($sharedPortal === null) {
-            throw $this->createNotFoundException('Project not found');
-        }
 
         // Check access.
         if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
             return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
-                'project' => $sharedPortal->getProject(),
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
         }
 
-        return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
+        if ($sharedPortal->isCustomerSharing()) {
+            return $this->renderCustomerView($sharedPortal, $request);
+        } else {
+            return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
+        }
     }
 
-    #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}', name: 'customer_portal_deprecated_customer', methods: ['GET', 'POST'])]
-    #[Route(path: '/auth/customer-portal/c/{customer}/{shareKey}', name: 'view_shared_project_timesheets_customer', methods: ['GET', 'POST'])]
-    public function viewCustomerAction(Customer $customer, string $shareKey, Request $request, CustomerStatisticService $customerStatisticsService): Response
+    #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}/project/{project}', methods: ['GET', 'POST'])]
+    #[Route(path: '/auth/customer-portal/{shareKey}/p/{project}', name: 'customer_portal_project', methods: ['GET', 'POST'])]
+    public function viewCustomerProjectAction(#[MapEntity(mapping: ['shareKey' => 'shareKey'])] SharedProjectTimesheet $sharedPortal, Project $project, Request $request): Response
     {
         $givenPassword = $request->get('spt-password');
+
+        if ($project->getCustomer() !== $sharedPortal->getCustomer()) {
+            throw $this->createAccessDeniedException('Requested project does not match customer');
+        }
+
+        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
+            return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
+                'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
+            ]);
+        }
+
+        return $this->renderProjectView($sharedPortal, $project, $request);
+    }
+
+    /**
+     * @deprecated only here for backwards compatibility
+     */
+    #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}', methods: ['GET', 'POST'])]
+    public function viewCustomerAction(#[MapEntity(mapping: ['shareKey' => 'shareKey'])] SharedProjectTimesheet $sharedPortal): Response
+    {
+        return $this->redirectToRoute('customer_portal_view', ['shareKey' => $sharedPortal->getShareKey()]);
+    }
+
+    private function renderCustomerView(SharedProjectTimesheet $sharedPortal, Request $request): Response
+    {
+        $customer = $sharedPortal->getCustomer();
+        if ($customer === null) {
+            throw $this->createNotFoundException('Invalid portal: Customer not found');
+        }
+
         $year = (int) $request->get('year', date('Y'));
         $month = (int) $request->get('month', date('m'));
         $detailsMode = $request->get('details', 'table');
-        $sharedPortal = $this->sharedProjectTimesheetRepository->findByCustomerAndShareKey(
-            $customer,
-            $shareKey
-        );
-
-        if ($sharedPortal === null) {
-            throw $this->createNotFoundException('Project not found');
-        }
-
-        // Check access.
-        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
-            return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
-                'project' => $sharedPortal->getCustomer(),
-                'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
-            ]);
-        }
 
         // Get time records.
         $timeRecords = $this->viewService->getTimeRecords($sharedPortal, $year, $month);
@@ -104,14 +114,14 @@ class ViewController extends AbstractController
         // we cannot call $this->getDateTimeFactory() as it throws a AccessDeniedException for anonymous users
         $timezone = $customer->getTimezone() ?? date_default_timezone_get();
         $date = new \DateTimeImmutable('now', new \DateTimeZone($timezone));
-        $stats = $customerStatisticsService->getBudgetStatisticModel($customer, $date);
+        $stats = $this->customerStatisticsService->getBudgetStatisticModel($customer, $date);
         $projects = $this->sharedProjectTimesheetRepository->getProjects($sharedPortal);
         $projectStats = $this->projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
 
         return $this->render('@SharedProjectTimesheets/view/customer.html.twig', [
             'sharedProject' => $sharedPortal,
             'customer' => $customer,
-            'shareKey' => $shareKey,
+            'shareKey' => $sharedPortal->getShareKey(),
             'timeRecords' => $timeRecords,
             'rateSum' => $rateSum,
             'durationSum' => $durationSum,
@@ -125,35 +135,6 @@ class ViewController extends AbstractController
             'stats' => $stats,
             'projectStats' => $projectStats,
         ]);
-    }
-
-    #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}/project/{project}', name: 'customer_portal_deprecated_customer_project', methods: ['GET', 'POST'])]
-    #[Route(path: '/auth/customer-portal/customer/{customer}/{shareKey}/project/{project}', name: 'view_shared_project_timesheets_project', methods: ['GET', 'POST'])]
-    public function viewCustomerProjectAction(Customer $customer, string $shareKey, Project $project, Request $request): Response
-    {
-        $givenPassword = $request->get('spt-password');
-        $sharedPortal = $this->sharedProjectTimesheetRepository->findByCustomerAndShareKey(
-            $customer,
-            $shareKey
-        );
-
-        if ($sharedPortal === null) {
-            throw $this->createNotFoundException('Project not found');
-        }
-
-        if ($project->getCustomer() !== $customer) {
-            throw $this->createAccessDeniedException('Requested project does not match customer');
-        }
-
-        // Check access.
-        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
-            return $this->render('@SharedProjectTimesheets/view/auth.html.twig', [
-                'project' => $sharedPortal->getProject(),
-                'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
-            ]);
-        }
-
-        return $this->renderProjectView($sharedPortal, $project, $request);
     }
 
     private function renderProjectView(SharedProjectTimesheet $sharedProject, Project $project, Request $request): Response

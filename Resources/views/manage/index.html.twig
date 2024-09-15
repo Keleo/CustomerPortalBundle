@@ -11,11 +11,7 @@
         <i class="{% if entry.isCustomerSharing() %}{{ 'customer'|icon(false) }}{% else %}{{ 'project'|icon(false) }}{% endif %}" title="{{ entry.getType() | trans }}"></i>
     {% elseif column == 'url' %}
         {% if entry.shareKey %}
-            {% if entry.project %}
-                {% set p_url = url('view_shared_project_timesheets', {project: entry.project.id, shareKey: entry.shareKey}) %}
-            {% elseif entry.customer %}
-                {% set p_url = url('view_shared_project_timesheets_customer', {customer: entry.customer.id, shareKey: entry.shareKey}) %}
-            {% endif %}
+            {% set p_url = url('customer_portal_view', {shareKey: entry.shareKey}) %}
             <a href="{{ p_url }}" target="_blank">
                 {{ p_url }}
             </a>

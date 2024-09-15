@@ -13,6 +13,7 @@ namespace KimaiPlugin\SharedProjectTimesheetsBundle\Repository;
 use App\Entity\Customer;
 use App\Entity\Project;
 use App\Repository\Paginator\QueryPaginator;
+use App\Repository\ProjectRepository;
 use App\Repository\Query\BaseQuery;
 use App\Repository\Query\ProjectQuery;
 use App\Utils\Pagination;
@@ -53,36 +54,11 @@ class SharedProjectTimesheetRepository extends EntityRepository
         $em->flush();
     }
 
-    public function findBySharedProjectTimesheet(SharedProjectTimesheet $sharedProjectTimesheet): ?SharedProjectTimesheet
-    {
-        if ($sharedProjectTimesheet->isCustomerSharing()) {
-            return $this->findByCustomerAndShareKey($sharedProjectTimesheet->getCustomer(), $sharedProjectTimesheet->getShareKey());
-        } else {
-            return $this->findByProjectAndShareKey($sharedProjectTimesheet->getProject(), $sharedProjectTimesheet->getShareKey());
-        }
-    }
-
-    public function findByProjectAndShareKey(Project|int|null $project, ?string $shareKey): ?SharedProjectTimesheet
+    public function findByShareKey(string $shareKey): ?SharedProjectTimesheet
     {
         return $this->createQueryBuilder('spt')
-            ->where('spt.project = :project')
-            ->andWhere('spt.customer is null')
-            ->andWhere('spt.shareKey = :shareKey')
+            ->where('spt.shareKey = :shareKey')
             ->setMaxResults(1)
-            ->setParameter('project', $project)
-            ->setParameter('shareKey', $shareKey)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    public function findByCustomerAndShareKey(Customer|int $customer, ?string $shareKey): ?SharedProjectTimesheet
-    {
-        return $this->createQueryBuilder('spt')
-            ->where('spt.project is null')
-            ->andWhere('spt.customer = :customer')
-            ->andWhere('spt.shareKey = :shareKey')
-            ->setMaxResults(1)
-            ->setParameter('customer', $customer)
             ->setParameter('shareKey', $shareKey)
             ->getQuery()
             ->getOneOrNullResult();
@@ -97,9 +73,12 @@ class SharedProjectTimesheetRepository extends EntityRepository
             return [$sharedProject->getProject()];
         }
 
-        /** @var \App\Repository\ProjectRepository $projectRepository */
+        /** @var ProjectRepository $projectRepository */
         $projectRepository = $this->_em->getRepository(Project::class);
 
-        return $projectRepository->getProjectsForQuery((new ProjectQuery())->setCustomers([$sharedProject->getCustomer()]));
+        $query = new ProjectQuery();
+        $query->setCustomers([$sharedProject->getCustomer()]);
+
+        return $projectRepository->getProjectsForQuery($query);
     }
 }
