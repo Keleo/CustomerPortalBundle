@@ -9,6 +9,7 @@ Compatibility: requires minimum Kimai 2.21.0
 - Feature: allow to share an entire customer (#7)
 - Feature: add details button and stats in project listing on shared customer page (#8)
 - Internal: use translations from core, use latest repository features
+- Security: Use password field for login
 
 ## Version 3.1.0
 
