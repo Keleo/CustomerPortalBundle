@@ -1,31 +1,32 @@
-# Changelog
+## Version 3.2.0
 
-## 3.2.0
+Compatibility: requires minimum Kimai 2.21.0
 
-Compatibility: requires minimum Kimai 2.19.0
+- Fix dropdowns (#5)
+- Feature: added configuration to toggle financial- and time budget statistics (#6)
+- Feature: allow to share an entire customer (#7)
+- Feature: add details button and stats in project listing on shared customer page (#8)
+- Internal: use latest repository features
 
-- Fix dropdowns
-- Feature: added configuration to toggle financial- and time budget statistics
-
-## 3.1.0
+## Version 3.1.0
 
 Compatibility: requires minimum Kimai 2.11.0
 
 - Changes in CSS files, required for Kimai 2.11.0 build
 
-## 3.0.2
+## Version 3.0.2
 
 Compatibility: requires minimum Kimai 2.1.0
 
 - Use attributes instead of annotations for Doctrine to prevent deprecation warnings
 
-## 3.0.1
+## Version 3.0.1
 
 Compatibility: requires minimum Kimai 2.0.33
 
 - Fix: possible pagination issues
 
-## 3.0.0
+## Version 3.0.0
 
 Compatibility: requires minimum Kimai 2.0.26
 

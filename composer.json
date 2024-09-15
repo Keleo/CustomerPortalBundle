@@ -22,7 +22,7 @@
     ],
     "extra": {
         "kimai": {
-            "require": 21900,
+            "require": 22100,
             "name": "Shared-Projects"
         }
     },
