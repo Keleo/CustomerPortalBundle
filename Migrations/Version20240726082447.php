@@ -14,6 +14,9 @@ use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 
+/**
+ * @version 3.2.0
+ */
 final class Version20240726082447 extends AbstractMigration
 {
     public function getDescription(): string
