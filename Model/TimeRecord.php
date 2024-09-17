@@ -44,7 +44,7 @@ class TimeRecord
 
     public static function fromTimesheet(Timesheet $timesheet, string $mergeMode = RecordMergeMode::MODE_MERGE): TimeRecord
     {
-        if (!\in_array($mergeMode, self::VALID_MERGE_MODES)) {
+        if (!\in_array($mergeMode, self::VALID_MERGE_MODES, true)) {
             throw new \InvalidArgumentException("Invalid merge mode given: $mergeMode");
         }
 

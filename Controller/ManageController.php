@@ -74,7 +74,7 @@ class ManageController extends AbstractController
     {
         $type = $request->query->get('type');
 
-        if (!\in_array($type, [SharedProjectTimesheet::TYPE_CUSTOMER, SharedProjectTimesheet::TYPE_PROJECT])) {
+        if (!\in_array($type, [SharedProjectTimesheet::TYPE_CUSTOMER, SharedProjectTimesheet::TYPE_PROJECT], true)) {
             throw new InvalidArgumentException('Invalid value for type');
         }
 
@@ -134,7 +134,7 @@ class ManageController extends AbstractController
                 $this->flashUpdateException($e);
             }
         } elseif (!$form->isSubmitted()) {
-            if (!empty($sharedProject->getPassword())) {
+            if ($sharedProject->hasPassword()) {
                 $form->get('password')->setData(ManageService::PASSWORD_DO_NOT_CHANGE_VALUE);
             }
         }

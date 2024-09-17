@@ -51,10 +51,10 @@ class ManageService
         }
 
         // Handle password
-        $currentHashedPassword = !empty($sharedProjectTimesheet->getPassword()) ? $sharedProjectTimesheet->getPassword() : null;
+        $currentHashedPassword = $sharedProjectTimesheet->hasPassword() ? $sharedProjectTimesheet->getPassword() : null;
 
         if ($newPassword !== self::PASSWORD_DO_NOT_CHANGE_VALUE) {
-            if (!empty($newPassword)) {
+            if (is_string($newPassword) && $newPassword !== '') {
                 $encodedPassword = $this->passwordHasherFactory->getPasswordHasher('customer_portal')->hash($newPassword);
                 $sharedProjectTimesheet->setPassword($encodedPassword);
             } else {

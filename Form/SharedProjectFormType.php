@@ -118,7 +118,8 @@ class SharedProjectFormType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        if (!empty($form->get('password')->getData())) {
+        $data = $form->get('password')->getData();
+        if (is_string($data) && trim($data) !== '') {
             $view['password']->vars['value'] = ManageService::PASSWORD_DO_NOT_CHANGE_VALUE;
         }
     }

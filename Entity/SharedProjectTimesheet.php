@@ -111,6 +111,11 @@ class SharedProjectTimesheet
         return $this->password;
     }
 
+    public function hasPassword(): bool
+    {
+        return $this->password !== null && $this->password !== '';
+    }
+
     public function setPassword(?string $password): void
     {
         $this->password = $password;
@@ -123,7 +128,7 @@ class SharedProjectTimesheet
 
     public function setEntryUserVisible(bool $entryUserVisible): void
     {
-        $this->entryUserVisible = (bool) $entryUserVisible;
+        $this->entryUserVisible = $entryUserVisible;
     }
 
     public function isEntryRateVisible(): bool
@@ -133,7 +138,7 @@ class SharedProjectTimesheet
 
     public function setEntryRateVisible(bool $entryRateVisible): void
     {
-        $this->entryRateVisible = (bool) $entryRateVisible;
+        $this->entryRateVisible = $entryRateVisible;
     }
 
     public function hasRecordMerging(): bool

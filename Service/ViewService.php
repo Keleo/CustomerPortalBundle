@@ -50,7 +50,7 @@ class ViewService
 
             if (!$this->request->getSession()->has($sessionPasswordKey)) {
                 // Check given password
-                if (empty($givenPassword) || !$this->passwordHasherFactory->getPasswordHasher('customer_portal')->verify($hashedPassword, $givenPassword)) {
+                if ($givenPassword === null || $givenPassword === '' || !$this->passwordHasherFactory->getPasswordHasher('customer_portal')->verify($hashedPassword, $givenPassword)) {
                     return false;
                 }
 
