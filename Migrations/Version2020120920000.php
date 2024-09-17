@@ -23,7 +23,7 @@ final class Version2020120920000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
         $table->addColumn(
             'record_merge_mode',
             Types::STRING,
@@ -33,7 +33,7 @@ final class Version2020120920000 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
         $table->dropColumn('record_merge_mode');
     }
 }

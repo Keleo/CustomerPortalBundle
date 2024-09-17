@@ -26,11 +26,16 @@ final class Version20240915125912 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE kimai2_shared_project_timesheets DROP INDEX IDX_BE51C9AF06F2E59, ADD UNIQUE INDEX UNIQ_BE51C9AF06F2E59 (share_key)');
+        $table = $schema->getTable('kimai2_customer_portals');
+        if ($table->hasIndex('IDX_BE51C9AF06F2E59')) {
+            $this->addSql('ALTER TABLE kimai2_customer_portals DROP INDEX IDX_BE51C9AF06F2E59');
+        }
+        $this->addSql('ALTER TABLE kimai2_customer_portals ADD UNIQUE INDEX UNIQ_BE51C9AF06F2E59 (share_key)');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE kimai2_shared_project_timesheets DROP INDEX UNIQ_BE51C9AF06F2E59, ADD INDEX IDX_BE51C9AF06F2E59 (share_key)');
+        $this->addSql('ALTER TABLE kimai2_customer_portals DROP INDEX UNIQ_BE51C9AF06F2E59');
+        $this->addSql('ALTER TABLE kimai2_customer_portals ADD INDEX IDX_BE51C9AF06F2E59 (share_key)');
     }
 }

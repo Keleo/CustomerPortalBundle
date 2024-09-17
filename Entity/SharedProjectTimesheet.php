@@ -18,7 +18,7 @@ use LogicException;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'kimai2_shared_project_timesheets')]
+#[ORM\Table(name: 'kimai2_customer_portals')]
 #[ORM\Index(columns: ['customer_id'])]
 #[ORM\Index(columns: ['project_id'])]
 #[ORM\Index(columns: ['share_key'])]

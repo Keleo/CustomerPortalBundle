@@ -22,7 +22,7 @@ final class Version2020122010000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
 
         $table->addColumn('annual_chart_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
         $table->addColumn('monthly_chart_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
@@ -30,7 +30,7 @@ final class Version2020122010000 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
 
         $table->dropColumn('annual_chart_visible');
         $table->dropColumn('monthly_chart_visible');

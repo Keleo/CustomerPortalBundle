@@ -25,15 +25,17 @@ final class Version20240726082447 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
         $table->addColumn('customer_id', Types::INTEGER, [
             'notnull' => false,
         ]);
         $table->modifyColumn('project_id', [
             'notnull' => false,
         ]);
-        $table->dropIndex('UNIQ_BE51C9A166D1F9CF06F2E59');
-        $table->addUniqueIndex(['customer_id', 'project_id', 'share_key']);
+        if ($table->hasIndex('UNIQ_BE51C9A166D1F9CF06F2E59')) {
+            $table->dropIndex('UNIQ_BE51C9A166D1F9CF06F2E59');
+        }
+        $table->addUniqueIndex(['customer_id', 'project_id', 'share_key'], 'UNIQ_BE51C9A9395C3F3166D1F9CF06F2E59');
         $table->addForeignKeyConstraint(
             'kimai2_customers',
             ['customer_id'],
@@ -47,7 +49,7 @@ final class Version20240726082447 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
         $table->dropIndex('UNIQ_BE51C9A9395C3F3166D1F9CF06F2E59');
         $table->addUniqueIndex(['project_id', 'share_key']);
         $table->removeForeignKey('FK_BE51C9A9395C3F3');

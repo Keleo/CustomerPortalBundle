@@ -8,6 +8,6 @@
 # --------------------------------------------------------------------------------------------------
 
 table_storage:
-  table_name: 'bundle_migration_shared_project_timesheets'
+  table_name: 'bundle_migration_customer_portal'
 migrations_paths:
   KimaiPlugin\CustomerPortalBundle\Migrations: 'var/plugins/CustomerPortalBundle/Migrations'

@@ -15,8 +15,6 @@ use Doctrine\DBAL\Types\Types;
 
 final class Version2020120600000 extends AbstractMigration
 {
-    public const SHARED_PROJECT_TIMESHEETS_TABLE_NAME = 'kimai2_shared_project_timesheets';
-
     public function getDescription(): string
     {
         return 'Initial table structure for the Customer Portal';
@@ -24,7 +22,7 @@ final class Version2020120600000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $table = $schema->createTable(self::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->createTable('kimai2_customer_portals');
         $table->addColumn('id', Types::INTEGER, ['autoincrement' => true, 'notnull' => true]);
         $table->addColumn('project_id', Types::INTEGER, ['notnull' => true]);
         $table->addColumn('share_key', Types::STRING, ['length' => 20, 'notnull' => true]);
@@ -48,6 +46,6 @@ final class Version2020120600000 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $schema->dropTable(self::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $schema->dropTable('kimai2_customer_portals');
     }
 }

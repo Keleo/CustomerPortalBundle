@@ -25,7 +25,7 @@ final class Version20240722111349 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
 
         $table->addColumn('budget_stats_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
         $table->addColumn('time_budget_stats_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
@@ -33,7 +33,7 @@ final class Version20240722111349 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $table = $schema->getTable(Version2020120600000::SHARED_PROJECT_TIMESHEETS_TABLE_NAME);
+        $table = $schema->getTable('kimai2_customer_portals');
 
         $table->dropColumn('budget_stats_visible');
         $table->dropColumn('time_budget_stats_visible');
