@@ -1,5 +1,6 @@
 {% extends '@theme/fullpage.html.twig' %}
 {% from "macros/widgets.html.twig" import nothing_found %}
+{% import "macros/progressbar.html.twig" as progress %}
 
 {% block title %}{{ 'customer' | trans }}: {{ customer.getName() }}{% endblock %}
 
@@ -25,7 +26,7 @@
 {% block page_classes %}page{% endblock %}
 
 {% block page_content %}
-{% set show_progress = (stats.hasBudget() and sharedProject.isBudgetStatsVisible()) or (stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible()) %}
+{% set show_progress = (stats.hasBudget() and portal.isBudgetStatsVisible()) or (stats.hasTimeBudget() and portal.isTimeBudgetStatsVisible()) %}
 {% set show_month_stats = statsPerMonth is not null %}
 <div class="p-4">
 
@@ -91,16 +92,48 @@
     </div>
     {% endif %}
 
+    {% if show_progress %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">{{ 'shared_project_timesheets.view.stats.title' | trans }}</h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover dataTable">
+                    {% if stats.hasBudget() and portal.isBudgetStatsVisible() %}
+                        <tr>
+                            <td>
+                                {{ 'budget' | trans }}
+                            </td>
+                            <td>
+                                {{ progress.progressbar_budget(stats, currency) }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if stats.hasTimeBudget() and portal.isTimeBudgetStatsVisible() %}
+                        <tr>
+                            <td>
+                                {{ 'timeBudget' | trans }}
+                            </td>
+                            <td>
+                                {{ progress.progressbar_timebudget(stats) }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="card mb-3">
         <div class="card-header">
             <h3 class="card-title">{{ 'shared_project_timesheets.view.table.title' | trans }}</h3>
             {% if monthlyChartVisible %}
                 <div class="card-actions">
                     <div class="btn-group">
-                        <a href="{{ url('customer_portal_view', {'shareKey': sharedProject.shareKey}) }}?year={{ year }}&month={{ month }}" class="btn btn-default btn-icon">
+                        <a href="{{ url('customer_portal_view', {shareKey: portal.shareKey, year: year, month: month}) }}" class="btn btn-default btn-icon">
                             <i class="fas fa-table"></i>
                         </a>
-                        <a href="{{ url('customer_portal_view', {'shareKey': sharedProject.shareKey}) }}?year={{ year }}&month={{ month }}&details=chart" class="btn btn-default btn-icon">
+                        <a href="{{ url('customer_portal_view', {shareKey: portal.shareKey, year: year, month: month, details: 'chart'}) }}" class="btn btn-default btn-icon">
                             <i class="fas fa-chart-bar"></i>
                         </a>
                     </div>
@@ -115,13 +148,13 @@
                     <thead>
                         <tr>
                             <th class="w-min">{{ 'date' | trans }}</th>
-                            {% if sharedProject.entryUserVisible %}
+                            {% if portal.entryUserVisible %}
                             <th>{{ 'user' | trans }}</th>
                             {% endif %}
                             <th>{{ 'project' | trans }}</th>
                             <th>{{ 'description' | trans }}</th>
                             <th class="w-min">{{ 'duration'|trans }}</th>
-                            {% if sharedProject.entryRateVisible %}
+                            {% if portal.entryRateVisible %}
                             <th class="w-min">{{ 'hourlyRate' | trans }}</th>
                             <th class="w-min">{{ 'total_rate' | trans }}</th>
                             {% endif %}
@@ -130,13 +163,13 @@
                     {% for record in timeRecords %}
                         <tr>
                             <td>{{ record.date | date_short }}</td>
-                            {% if sharedProject.entryUserVisible %}
+                            {% if portal.entryUserVisible %}
                                 <td>{{ record.user.displayName }}</td>
                             {% endif %}
                             <td>{{ record.getProject.name }}</td>
                             <td>{{ record.description | e | nl2br }}</td>
                             <td>{{ record.duration | duration }}</td>
-                            {% if sharedProject.entryRateVisible %}
+                            {% if portal.entryRateVisible %}
                                 {% if record.differentHourlyRates %}
                                     <td>
                                         {% for info in record.hourlyRates %}
@@ -158,13 +191,13 @@
                     <tfoot>
                         <tr class="summary">
                             <td></td>
-                            {% if sharedProject.entryUserVisible %}
+                            {% if portal.entryUserVisible %}
                             <td></td>
                             {% endif %}
                             <td></td>
                             <td></td>
                             <td>{{ durationSum | duration }}</td>
-                            {% if sharedProject.entryRateVisible %}
+                            {% if portal.entryRateVisible %}
                             <td></td>
                             <td>{{ rateSum | format_currency(currency) }}</td>
                             {% endif %}
@@ -178,41 +211,11 @@
         </div>
     </div>
 
-    {% if show_progress %}
-        {% import "macros/progressbar.html.twig" as progress %}
-        <div class="card mb-3">
-            <div class="card-body p-0">
-                <table class="table table-hover dataTable">
-                    {% if stats.hasBudget() and sharedProject.isBudgetStatsVisible() %}
-                        <tr>
-                            <td>
-                                {{ 'budget' | trans }}
-                            </td>
-                            <td>
-                                {{ progress.progressbar_budget(stats, currency) }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible() %}
-                        <tr>
-                            <td>
-                                {{ 'timeBudget' | trans }}
-                            </td>
-                            <td>
-                                {{ progress.progressbar_timebudget(stats) }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                </table>
-            </div>
-        </div>
-    {% endif %}
-
     <div class="card mb-3">
         <div class="card-header">
             <h3 class="card-title">{{ 'projects'|trans }}</h3>
         </div>
-        <div class="card-body p-0 todocorrectclass">
+        <div class="card-body p-0">
             {% if projectStats is empty %}
                 {{ nothing_found() }}
             {% else %}
@@ -220,7 +223,7 @@
                     <thead>
                         <tr>
                             <th>{{ 'name'|trans }}</th>
-                            {% if (sharedProject.isBudgetStatsVisible() or sharedProject.isTimeBudgetStatsVisible()) %}
+                            {% if (portal.isBudgetStatsVisible() or portal.isTimeBudgetStatsVisible()) %}
                                 <th></th>
                             {% endif %}
                             <th class="w-min"></th>
@@ -230,18 +233,18 @@
                         {% set project = stats.getProject() %}
                         {%
                             set project_url = url('customer_portal_project', {
-                                'shareKey': shareKey,
+                                'shareKey': portal.shareKey,
                                 'project': project.getId(),
                             })
                         %}
                         <tr class="alternative-link" data-href="{{ project_url }}">
                             <td>{{ project.name }}</td>
-                            {% if (sharedProject.isBudgetStatsVisible() or sharedProject.isTimeBudgetStatsVisible()) %}
+                            {% if (portal.isBudgetStatsVisible() or portal.isTimeBudgetStatsVisible()) %}
                                 <td>
-                                    {% if stats.hasBudget() and sharedProject.isBudgetStatsVisible() %}
+                                    {% if stats.hasBudget() and portal.isBudgetStatsVisible() %}
                                         {{ progress.progressbar_budget(stats, currency) }}
                                     {% endif %}
-                                    {% if stats.hasTimeBudget() and sharedProject.isTimeBudgetStatsVisible() %}
+                                    {% if stats.hasTimeBudget() and portal.isTimeBudgetStatsVisible() %}
                                         {{ progress.progressbar_timebudget(stats) }}
                                     {% endif %}
                                 </td>

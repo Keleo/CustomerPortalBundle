@@ -118,9 +118,8 @@ class ViewController extends AbstractController
         $projectStats = $this->projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
 
         return $this->render('@CustomerPortal/view/customer.html.twig', [
-            'sharedProject' => $sharedPortal,
+            'portal' => $sharedPortal,
             'customer' => $customer,
-            'shareKey' => $sharedPortal->getShareKey(),
             'timeRecords' => $timeRecords,
             'rateSum' => $rateSum,
             'durationSum' => $durationSum,
@@ -168,7 +167,7 @@ class ViewController extends AbstractController
         $stats = $this->projectStatisticService->getBudgetStatisticModel($project, $date);
 
         return $this->render('@CustomerPortal/view/project.html.twig', [
-            'sharedProject' => $sharedProject,
+            'portal' => $sharedProject,
             'timeRecords' => $timeRecords,
             'rateSum' => $rateSum,
             'durationSum' => $durationSum,

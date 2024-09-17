@@ -35,7 +35,7 @@ shared_project_timesheets:
             table: Tabelle
             chart: Diagramm
         stats:
-            title: "Projektstatistiken"
+            title: "Statistiken"
 
     model:
         merge_record_mode:
