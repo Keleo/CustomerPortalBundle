@@ -12,7 +12,6 @@ namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
-use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
 
 final class Version20240915125912 extends AbstractMigration
 {
