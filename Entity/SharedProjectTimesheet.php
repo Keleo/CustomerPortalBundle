@@ -19,12 +19,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: 'kimai2_customer_portals')]
-#[ORM\Index(columns: ['customer_id'])]
-#[ORM\Index(columns: ['project_id'])]
 #[ORM\Index(columns: ['share_key'])]
-#[ORM\Index(columns: ['customer_id', 'project_id', 'share_key'])]
 #[ORM\Entity(repositoryClass: SharedProjectTimesheetRepository::class)]
-#[ORM\UniqueConstraint(columns: ['customer_id', 'project_id', 'share_key'])]
 #[ORM\UniqueConstraint(columns: ['share_key'])]
 #[UniqueEntity(fields: ['shareKey'])]
 class SharedProjectTimesheet
@@ -53,26 +49,26 @@ class SharedProjectTimesheet
     #[Assert\Length(max: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(name: 'entry_user_visible', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'entry_user_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $entryUserVisible = false;
 
-    #[ORM\Column(name: 'entry_rate_visible', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'entry_rate_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $entryRateVisible = false;
 
     #[ORM\Column(name: 'record_merge_mode', type: 'string', length: 50, nullable: false)]
     #[Assert\Length(max: 50)]
     private string $recordMergeMode = RecordMergeMode::MODE_NONE;
 
-    #[ORM\Column(name: 'annual_chart_visible', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'annual_chart_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $annualChartVisible = false;
 
-    #[ORM\Column(name: 'monthly_chart_visible', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'monthly_chart_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $monthlyChartVisible = false;
 
-    #[ORM\Column(name: 'budget_stats_visible', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'budget_stats_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $budgetStatsVisible = false;
 
-    #[ORM\Column(name: 'time_budget_stats_visible', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'time_budget_stats_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $timeBudgetStatsVisible = false;
 
     public function getId(): ?int

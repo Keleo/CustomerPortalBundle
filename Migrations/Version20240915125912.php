@@ -30,7 +30,7 @@ final class Version20240915125912 extends AbstractMigration
         $table->addColumn('customer_id', Types::INTEGER, ['notnull' => false]);
         $table->addColumn('share_key', Types::STRING, ['length' => 20, 'notnull' => true]);
         $table->addColumn('password', Types::STRING, ['length' => 255, 'default' => null, 'notnull' => false]);
-        $table->addColumn('record_merge_mode', Types::STRING, ['length' => 50, 'notnull' => true, 'default' => RecordMergeMode::MODE_NONE]);
+        $table->addColumn('record_merge_mode', Types::STRING, ['length' => 50, 'notnull' => true]);
         $table->addColumn('entry_user_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
         $table->addColumn('entry_rate_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
         $table->addColumn('annual_chart_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
@@ -38,8 +38,8 @@ final class Version20240915125912 extends AbstractMigration
         $table->addColumn('budget_stats_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
         $table->addColumn('time_budget_stats_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
 
-        $table->addForeignKeyConstraint('kimai2_projects', ['project_id'], ['id'], ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']);
-        $table->addForeignKeyConstraint('kimai2_customers', ['customer_id'], ['id'], ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']);
+        $table->addForeignKeyConstraint('kimai2_projects', ['project_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_7747AE6B166D1F9C');
+        $table->addForeignKeyConstraint('kimai2_customers', ['customer_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_7747AE6B9395C3F3');
 
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['share_key']);
