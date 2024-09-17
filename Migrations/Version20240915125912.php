@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the "Customer-Portal plugin" for Kimai.
  *
@@ -13,29 +11,42 @@ namespace KimaiPlugin\CustomerPortalBundle\Migrations;
 
 use App\Doctrine\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Types;
+use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
 
-/**
- * @version 3.2.0
- */
 final class Version20240915125912 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Make the share-key unique';
+        return 'Initial table structure for the Customer Portal';
     }
 
     public function up(Schema $schema): void
     {
-        $table = $schema->getTable('kimai2_customer_portals');
-        if ($table->hasIndex('IDX_BE51C9AF06F2E59')) {
-            $this->addSql('ALTER TABLE kimai2_customer_portals DROP INDEX IDX_BE51C9AF06F2E59');
-        }
-        $this->addSql('ALTER TABLE kimai2_customer_portals ADD UNIQUE INDEX UNIQ_BE51C9AF06F2E59 (share_key)');
+        $table = $schema->createTable('kimai2_customer_portals');
+
+        $table->addColumn('id', Types::INTEGER, ['autoincrement' => true, 'notnull' => true]);
+        $table->addColumn('project_id', Types::INTEGER, ['notnull' => false]);
+        $table->addColumn('customer_id', Types::INTEGER, ['notnull' => false]);
+        $table->addColumn('share_key', Types::STRING, ['length' => 20, 'notnull' => true]);
+        $table->addColumn('password', Types::STRING, ['length' => 255, 'default' => null, 'notnull' => false]);
+        $table->addColumn('record_merge_mode', Types::STRING, ['length' => 50, 'notnull' => true, 'default' => RecordMergeMode::MODE_NONE]);
+        $table->addColumn('entry_user_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
+        $table->addColumn('entry_rate_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
+        $table->addColumn('annual_chart_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
+        $table->addColumn('monthly_chart_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
+        $table->addColumn('budget_stats_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
+        $table->addColumn('time_budget_stats_visible', Types::BOOLEAN, ['default' => false, 'notnull' => true]);
+
+        $table->addForeignKeyConstraint('kimai2_projects', ['project_id'], ['id'], ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']);
+        $table->addForeignKeyConstraint('kimai2_customers', ['customer_id'], ['id'], ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']);
+
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['share_key']);
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE kimai2_customer_portals DROP INDEX UNIQ_BE51C9AF06F2E59');
-        $this->addSql('ALTER TABLE kimai2_customer_portals ADD INDEX IDX_BE51C9AF06F2E59 (share_key)');
+        $schema->dropTable('kimai2_customer_portals');
     }
 }
