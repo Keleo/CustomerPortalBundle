@@ -33,7 +33,7 @@ class MenuSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getAppsMenu()->addChild(
+        $event->getAdminMenu()->addChild(
             new MenuItemModel('manage_shared_project_timesheets', 'shared_project_timesheets.title', 'manage_shared_project_timesheets', [], 'fas fa-receipt')
         );
     }
