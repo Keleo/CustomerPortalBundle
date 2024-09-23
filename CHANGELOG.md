@@ -1,3 +1,9 @@
+## Version 4.1.1
+
+Compatibility: requires minimum Kimai 2.21.0
+
+- Create with invalid type caused 500: redirect to manage view instead 
+
 ## Version 4.1.0
 
 Compatibility: requires minimum Kimai 2.21.0

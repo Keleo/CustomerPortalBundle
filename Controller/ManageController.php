@@ -13,7 +13,6 @@ use App\Controller\AbstractController;
 use App\Repository\Query\BaseQuery;
 use App\Utils\DataTable;
 use App\Utils\PageSetup;
-use InvalidArgumentException;
 use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
 use KimaiPlugin\CustomerPortalBundle\Form\SharedCustomerFormType;
 use KimaiPlugin\CustomerPortalBundle\Form\SharedProjectFormType;
@@ -75,7 +74,7 @@ class ManageController extends AbstractController
         $type = $request->query->get('type');
 
         if (!\in_array($type, [SharedProjectTimesheet::TYPE_CUSTOMER, SharedProjectTimesheet::TYPE_PROJECT], true)) {
-            throw new InvalidArgumentException('Invalid value for type');
+            return $this->redirectToRoute('manage_shared_project_timesheets');
         }
 
         $sharedProject = new SharedProjectTimesheet();
