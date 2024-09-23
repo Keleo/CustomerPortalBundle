@@ -28,10 +28,9 @@ class SharedProjectSubscriber extends AbstractActionsSubscriber
             return;
         }
 
-        /** @var SharedProjectTimesheet $sharedProject */
         $sharedProject = $payload['sharedProject'];
 
-        if ($sharedProject->getId() === null || $sharedProject->getType() === null) {
+        if (!$sharedProject instanceof SharedProjectTimesheet || $sharedProject->getId() === null) {
             return;
         }
 
