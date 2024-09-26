@@ -3,7 +3,7 @@
     "description": "Share timesheets and statistics via URLs",
     "homepage": "https://www.kimai.org/store/customer-portal.html",
     "type": "kimai-plugin",
-    "version": "4.1.1",
+    "version": "4.1.2",
     "keywords": [
         "kimai",
         "kimai-plugin"

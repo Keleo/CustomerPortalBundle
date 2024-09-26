@@ -60,6 +60,7 @@ class ManageController extends AbstractController
         $page = new PageSetup('shared_project_timesheets.title');
         $page->setActionName('customer_portal');
         $page->setDataTable($table);
+        $page->setHelp('plugin-customer-portal.html');
 
         return $this->render('@CustomerPortal/manage/index.html.twig', [
             'page_setup' => $page,
