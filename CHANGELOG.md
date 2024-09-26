@@ -1,13 +1,8 @@
-## Version 4.1.2
-
-Compatibility: requires minimum Kimai 2.21.0
-
-- Added missing "Documentation" link 
-
 ## Version 4.1.1
 
 Compatibility: requires minimum Kimai 2.21.0
 
+- Added missing "Documentation" link 
 - Create with invalid type caused 500: redirect to manage view instead 
 
 ## Version 4.1.0
