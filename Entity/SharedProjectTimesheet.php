@@ -14,7 +14,6 @@ use App\Entity\Project;
 use Doctrine\ORM\Mapping as ORM;
 use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
 use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
-use LogicException;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
