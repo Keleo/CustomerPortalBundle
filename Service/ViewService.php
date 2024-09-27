@@ -157,7 +157,7 @@ class ViewService
                     'project' => $limitProject,
                     'year' => $year,
                 ]);
-        } elseif ($sharedProject->isProjectSharing()) {
+        } elseif ($sharedProject->getProject() !== null) {
             $queryBuilder = $queryBuilder
                 ->andWhere('t.project = :project')
                 ->setParameters([
@@ -223,7 +223,7 @@ class ViewService
                     'year' => $year,
                     'month' => $month,
                 ]);
-        } elseif ($sharedProject->isProjectSharing()) {
+        } elseif ($sharedProject->getProject() !== null) {
             $queryBuilder = $queryBuilder
                 ->andWhere('t.project = :project')
                 ->setParameters([

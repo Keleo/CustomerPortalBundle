@@ -3,7 +3,8 @@
 Compatibility: requires minimum Kimai 2.21.0
 
 - Added missing "Documentation" link 
-- Create with invalid type caused 500: redirect to manage view instead 
+- Create with invalid type caused 500: redirect to manage view instead
+- Simplified codebase
 
 ## Version 4.1.0
 

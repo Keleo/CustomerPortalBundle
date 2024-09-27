@@ -198,24 +198,10 @@ class SharedProjectTimesheet
 
     public function getType(): string
     {
-        if ($this->customer !== null && $this->project !== null) {
-            throw new LogicException('Invalid state: customer and project cannot be filled both');
-        }
-
         if ($this->customer !== null) {
             return static::TYPE_CUSTOMER;
         }
 
         return static::TYPE_PROJECT;
-    }
-
-    public function isCustomerSharing(): bool
-    {
-        return $this->getType() === static::TYPE_CUSTOMER;
-    }
-
-    public function isProjectSharing(): bool
-    {
-        return $this->getType() === static::TYPE_PROJECT;
     }
 }

@@ -114,9 +114,10 @@ class ManageController extends AbstractController
             throw $this->createNotFoundException('Project not found');
         }
 
-        $formClass = $sharedProject->isCustomerSharing() ?
-            SharedCustomerFormType::class :
-            SharedProjectFormType::class;
+        $formClass = SharedProjectFormType::class;
+        if ($sharedProject->getCustomer() !== null) {
+            $formClass = SharedCustomerFormType::class;
+        }
 
         $form = $this->createForm($formClass, $sharedProject, [
             'method' => 'POST',

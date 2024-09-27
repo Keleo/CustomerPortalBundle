@@ -8,7 +8,7 @@
     {% if column == 'name' %}
         {{ entry.project.name ?? entry.customer.name }}
     {% elseif column == 'type' %}
-        <i class="{% if entry.isCustomerSharing() %}{{ 'customer'|icon(false) }}{% else %}{{ 'project'|icon(false) }}{% endif %}" title="{{ entry.getType() | trans }}"></i>
+        <i class="{% if entry.getCustomer() != null %}{{ 'customer'|icon(false) }}{% else %}{{ 'project'|icon(false) }}{% endif %}" title="{{ entry.getType() | trans }}"></i>
     {% elseif column == 'url' %}
         {% if entry.shareKey %}
             {% set p_url = url('customer_portal_view', {shareKey: entry.shareKey}) %}

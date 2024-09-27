@@ -45,11 +45,11 @@ class ViewController extends AbstractController
             ]);
         }
 
-        if ($sharedPortal->isCustomerSharing()) {
+        if ($sharedPortal->getCustomer() !== null) {
             return $this->renderCustomerView($sharedPortal, $request);
-        } else {
-            return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
         }
+
+        return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
     }
 
     #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}/project/{project}', methods: ['GET', 'POST'])]
