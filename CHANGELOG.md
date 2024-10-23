@@ -1,3 +1,9 @@
+## Version 4.2.0
+
+Compatibility: requires minimum Kimai 2.21.0
+
+- Rename migration config for compatibility with new plugin installer
+
 ## Version 4.1.1
 
 Compatibility: requires minimum Kimai 2.21.0
