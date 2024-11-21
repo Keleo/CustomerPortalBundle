@@ -24,15 +24,22 @@ final class Version20240917151425 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $sawTable = false;
         if ($schema->hasTable('kimai2_shared_project_timesheets')) {
             $schema->dropTable('kimai2_shared_project_timesheets');
+            $sawTable = true;
         }
         if ($schema->hasTable('bundle_migration_shared_project_timesheets')) {
             $schema->dropTable('bundle_migration_shared_project_timesheets');
+            $sawTable = true;
+        }
+        if (!$sawTable) {
+            $this->preventEmptyMigrationWarning();
         }
     }
 
     public function down(Schema $schema): void
     {
+        $this->preventEmptyMigrationWarning();
     }
 }
