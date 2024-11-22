@@ -2,7 +2,7 @@
 
 Compatibility: requires minimum Kimai 2.25.0
 
-- Use translations from code 
+- Use translations from Kimai core
 - Rename migration config for compatibility with new plugin installer
 - Internal: PHPStan 2 with strict and deprecation rules
 
