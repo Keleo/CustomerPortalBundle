@@ -92,7 +92,9 @@ class ManageController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->manageService->create($sharedProject, $form->get('password')->getData());
+                /** @var string $password */
+                $password = $form->get('password')->getData();
+                $this->manageService->create($sharedProject, $password);
                 $this->flashSuccess('action.update.success');
 
                 return $this->redirectToRoute('manage_shared_project_timesheets');
@@ -127,7 +129,9 @@ class ManageController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->manageService->update($sharedProject, $form->get('password')->getData());
+                /** @var string $password */
+                $password = $form->get('password')->getData();
+                $this->manageService->update($sharedProject, $password);
                 $this->flashSuccess('action.update.success');
 
                 return $this->redirectToRoute('manage_shared_project_timesheets');

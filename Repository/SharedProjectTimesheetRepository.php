@@ -72,6 +72,10 @@ class SharedProjectTimesheetRepository extends EntityRepository
             return [$sharedProject->getProject()];
         }
 
+        if ($sharedProject->getCustomer() === null) {
+            throw new \InvalidArgumentException('Unsupported, needs a customer');
+        }
+
         /** @var ProjectRepository $projectRepository */
         $projectRepository = $this->_em->getRepository(Project::class); // @phpstan-ignore varTag.type
 

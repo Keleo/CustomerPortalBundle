@@ -49,7 +49,11 @@ class ViewController extends AbstractController
             return $this->renderCustomerView($sharedPortal, $request);
         }
 
-        return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
+        if ($sharedPortal->getProject() !== null) {
+            return $this->renderProjectView($sharedPortal, $sharedPortal->getProject(), $request);
+        }
+
+        throw $this->createNotFoundException('Invalid shared portal: neither customer nor project is set');
     }
 
     #[Route(path: '/auth/shared-project-timesheets/customer/{customer}/{shareKey}/project/{project}', methods: ['GET', 'POST'])]
@@ -161,7 +165,7 @@ class ViewController extends AbstractController
             ? $this->viewService->getMonthlyStats($sharedProject, $year, $month, $project) : null;
 
         // we cannot call $this->getDateTimeFactory() as it throws a AccessDeniedException for anonymous users
-        $timezone = $project->getCustomer()->getTimezone() ?? date_default_timezone_get();
+        $timezone = $project->getCustomer()?->getTimezone() ?? date_default_timezone_get();
         $date = new \DateTimeImmutable('now', new \DateTimeZone($timezone));
 
         $stats = $this->projectStatisticService->getBudgetStatisticModel($project, $date);

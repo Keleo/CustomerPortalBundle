@@ -48,6 +48,14 @@ class TimeRecord
             throw new \InvalidArgumentException("Invalid merge mode given: $mergeMode");
         }
 
+        if ($timesheet->getBegin() === null) {
+            throw new \InvalidArgumentException('Timesheet without begin date is not supported');
+        }
+
+        if ($timesheet->getUser() === null) {
+            throw new \InvalidArgumentException('Timesheet without user is not supported');
+        }
+
         $record = new TimeRecord($timesheet->getBegin(), $timesheet->getUser(), $mergeMode);
         $record->addTimesheet($timesheet);
 

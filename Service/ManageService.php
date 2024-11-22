@@ -29,7 +29,7 @@ class ManageService
         if ($sharedPortal->getShareKey() === null) {
             $i = 0;
             do {
-                $newKey = substr(preg_replace('/[^A-Za-z0-9]+/', '', $this->getUuidV4()), 0, 20);
+                $newKey = substr(preg_replace('/[^A-Za-z0-9]+/', '', $this->getUuidV4()), 0, 20); // @phpstan-ignore argument.type
                 $existingEntry = $this->repository->findByShareKey($newKey);
 
                 // make sure we exit in case we cannot generate a new key

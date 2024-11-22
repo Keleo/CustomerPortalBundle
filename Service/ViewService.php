@@ -95,12 +95,18 @@ class ViewService
         $timeRecords = [];
         $mergeMode = $sharedProject->getRecordMergeMode();
         foreach ($timesheets as $timesheet) {
+            if ($timesheet->getBegin() === null || $timesheet->getUser() === null) {
+                continue;
+            }
             $dateKey = $timesheet->getBegin()->format('Y-m-d');
             if (!\array_key_exists($dateKey, $timeRecords)) {
                 $timeRecords[$dateKey] = [];
             }
 
             $userKey = preg_replace('/[^a-z0-9]/', '', strtolower($timesheet->getUser()->getDisplayName()));
+            if ($userKey === null) {
+                continue;
+            }
             if ($mergeMode !== RecordMergeMode::MODE_NONE) {
                 // Assume that records from one user will be merged into one
                 if (!\array_key_exists($userKey, $timeRecords[$dateKey])) {
