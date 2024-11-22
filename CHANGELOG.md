@@ -1,8 +1,10 @@
 ## Version 4.2.0
 
-Compatibility: requires minimum Kimai 2.21.0
+Compatibility: requires minimum Kimai 2.25.0
 
+- Use translations from code 
 - Rename migration config for compatibility with new plugin installer
+- Internal: PHPStan 2 with strict and deprecation rules
 
 ## Version 4.1.1
 
