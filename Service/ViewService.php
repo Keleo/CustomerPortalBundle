@@ -89,7 +89,7 @@ class ViewService
         $query->setOrderBy('begin');
         $query->setOrder(BaseQuery::ORDER_ASC);
 
-        $timesheets = $this->timesheetRepository->getTimesheetsForQuery($query);
+        $timesheets = $this->timesheetRepository->getTimesheetResult($query)->getResults();
 
         // Filter time records by merge mode
         $timeRecords = [];

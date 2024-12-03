@@ -1,3 +1,9 @@
+## Version 4.3.0
+
+Compatibility: requires minimum Kimai 2.25.0
+
+- Use non-deprecated API to fetch timesheets
+
 ## Version 4.2.0
 
 Compatibility: requires minimum Kimai 2.25.0
