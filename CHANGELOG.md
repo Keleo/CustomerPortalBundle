@@ -2,6 +2,7 @@
 
 Compatibility: requires minimum Kimai 2.25.0
 
+- Added rate limiter to password protection form (10 failures within 1-hour will block access)
 - Remove form target (password protection) to prevent proxy issues with http vs https
 - Removed md5 password from session key
 - Use non-deprecated API to fetch timesheets

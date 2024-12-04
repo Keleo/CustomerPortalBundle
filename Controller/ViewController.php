@@ -39,7 +39,7 @@ class ViewController extends AbstractController
         $givenPassword = $request->get('spt-password');
 
         // Check access.
-        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
+        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword, $request)) {
             return $this->render('@CustomerPortal/view/auth.html.twig', [
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);
@@ -66,7 +66,7 @@ class ViewController extends AbstractController
             throw $this->createAccessDeniedException('Requested project does not match customer');
         }
 
-        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword)) {
+        if (!$this->viewService->hasAccess($sharedPortal, $givenPassword, $request)) {
             return $this->render('@CustomerPortal/view/auth.html.twig', [
                 'invalidPassword' => $request->isMethod('POST') && $givenPassword !== null,
             ]);

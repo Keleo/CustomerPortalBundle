@@ -20,8 +20,10 @@ use KimaiPlugin\CustomerPortalBundle\Model\ChartStat;
 use KimaiPlugin\CustomerPortalBundle\Model\RecordMergeMode;
 use KimaiPlugin\CustomerPortalBundle\Model\TimeRecord;
 use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 class ViewService
 {
@@ -30,6 +32,7 @@ class ViewService
         private readonly RequestStack $request,
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         private readonly SharedProjectTimesheetRepository $sharedTimesheetRepository,
+        private readonly RateLimiterFactory $customerPortalLimiter
     )
     {
     }
@@ -37,7 +40,7 @@ class ViewService
     /**
      * Check if the user has access to the given shared project timesheet.
      */
-    public function hasAccess(SharedProjectTimesheet $sharedProject, ?string $givenPassword): bool
+    public function hasAccess(SharedProjectTimesheet $sharedProject, ?string $givenPassword, Request $request): bool
     {
         $hashedPassword = $sharedProject->getPassword();
 
@@ -47,11 +50,18 @@ class ViewService
             $sessionPasswordKey = \sprintf('spt-authed-%d-%s', $sharedProject->getId(), $shareKey);
 
             if (!$this->request->getSession()->has($sessionPasswordKey)) {
+                $limiter = $this->customerPortalLimiter->create($request->getClientIp());
+                $limit = $limiter->consume();
+
+                if (!$limit->isAccepted()) {
+                    return false;
+                }
+
                 // Check given password
                 if ($givenPassword === null || $givenPassword === '' || !$this->passwordHasherFactory->getPasswordHasher('customer_portal')->verify($hashedPassword, $givenPassword)) {
                     return false;
                 }
-
+                $limiter->reset();
                 $this->request->getSession()->set($sessionPasswordKey, true);
             }
         }

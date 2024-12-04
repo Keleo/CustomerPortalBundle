@@ -44,5 +44,16 @@ class CustomerPortalExtension extends Extension implements PrependExtensionInter
                 'customer_portal' => 'auto',
             ],
         ]);
+
+        $container->prependExtensionConfig('framework', [
+            'rate_limiter' => [
+                'customer_portal' => [
+                    'policy' => 'fixed_window',
+                    'limit' => 10,
+                    'interval' => '1 hour',
+                    'lock_factory' => null,
+                ],
+            ],
+        ]);
     }
 }
