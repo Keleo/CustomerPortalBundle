@@ -2,6 +2,7 @@
 
 Compatibility: requires minimum Kimai 2.25.0
 
+- Remove form target (password protection) to prevent proxy issues with http vs https
 - Removed md5 password from session key
 - Use non-deprecated API to fetch timesheets
 

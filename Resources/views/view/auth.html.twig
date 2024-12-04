@@ -8,7 +8,7 @@
 
         <div class="card card-md">
             <div class="card-body">
-                <form action="{{ app.request.uri }}" method="POST">
+                <form action="" method="POST">
                     {% if invalidPassword %}
                         <div class="alert alert-important alert-danger">{{ 'Invalid credentials.' | trans({}, 'security') }}</div>
                     {% endif %}
