@@ -47,7 +47,8 @@ class ViewService
         if ($hashedPassword !== null) {
             // Check session
             $shareKey = $sharedProject->getShareKey();
-            $sessionPasswordKey = \sprintf('spt-authed-%d-%s', $sharedProject->getId(), $shareKey);
+            // the password is in the session key, so changing it will revoke previous access
+            $sessionPasswordKey = \sprintf('spt-authed-%d-%s-%s', $sharedProject->getId(), $shareKey, md5($hashedPassword));
 
             if (!$this->request->getSession()->has($sessionPasswordKey)) {
                 $limiter = $this->customerPortalLimiter->create($request->getClientIp());

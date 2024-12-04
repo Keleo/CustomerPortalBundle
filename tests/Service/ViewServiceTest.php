@@ -16,45 +16,42 @@ use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository
 use KimaiPlugin\CustomerPortalBundle\Service\ViewService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 
 class ViewServiceTest extends TestCase
 {
-    /**
-     * @var ViewService
-     */
-    private $service;
-
-    /**
-     * @var SessionInterface|MockObject
-     */
-    private $session;
-
-    /**
-     * @var PasswordHasherInterface|MockObject
-     */
-    private $encoder;
-
-    /**
-     * @var string
-     */
-    private $sessionKey;
+    private ViewService $service;
+    private SessionInterface $session;
+    private PasswordHasherInterface|MockObject $encoder;
+    private string $sessionKey;
+    private Request $request;
 
     protected function setUp(): void
     {
         $timesheetRepository = $this->createMock(TimesheetRepository::class);
         $sharedProjectTimesheetRepository = $this->createMock(SharedProjectTimesheetRepository::class);
-        $request = new RequestStack();
-        $this->session = $this->createPartialMock(SessionInterface::class, []);
+        $requestStack = new RequestStack();
+        $this->session = new Session(new MockArraySessionStorage());
 
         $factory = $this->createMock(PasswordHasherFactoryInterface::class);
         $this->encoder = $this->createMock(PasswordHasherInterface::class);
         $factory->method('getPasswordHasher')->willReturn($this->encoder);
 
-        $this->service = new ViewService($timesheetRepository, $request, $factory, $sharedProjectTimesheetRepository);
+        $this->request = new Request([], [], [], [], [], ['REMOTE_ADDR' => '1.1.1.1']);
+        $this->request->setSession($this->session);
+        $requestStack->push($this->request);
+
+        $rateLimiter = new RateLimiterFactory(['id' => 'customer_portal', 'policy' => 'sliding_window', 'limit' => 5, 'interval' => '1 hour'], new InMemoryStorage());
+
+        $this->service = new ViewService($timesheetRepository, $requestStack, $factory, $sharedProjectTimesheetRepository, $rateLimiter);
     }
 
     private function createSharedProjectTimesheet(): SharedProjectTimesheet
@@ -73,13 +70,13 @@ class ViewServiceTest extends TestCase
     public function testNoPassword(): void
     {
         $sharedProjectTimesheet = $this->createSharedProjectTimesheet();
-        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, '');
+        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, '', $this->request);
         self::assertTrue($hasAccess);
     }
 
     public function testValidPassword(): void
     {
-        $this->encoder->method('isPasswordValid')
+        $this->encoder->method('verify')
             ->willReturnCallback(function ($hashedPassword, $givenPassword) {
                 return $hashedPassword === $givenPassword;
             });
@@ -87,13 +84,13 @@ class ViewServiceTest extends TestCase
         $sharedProjectTimesheet = $this->createSharedProjectTimesheet();
         $sharedProjectTimesheet->setPassword('password');
 
-        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'password');
+        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'password', $this->request);
         self::assertTrue($hasAccess);
     }
 
     public function testInvalidPassword(): void
     {
-        $this->encoder->method('isPasswordValid')
+        $this->encoder->method('verify')
             ->willReturnCallback(function ($hashedPassword, $givenPassword) {
                 return $hashedPassword === $givenPassword;
             });
@@ -101,28 +98,15 @@ class ViewServiceTest extends TestCase
         $sharedProjectTimesheet = $this->createSharedProjectTimesheet();
         $sharedProjectTimesheet->setPassword('password');
 
-        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'wrong');
+        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'wrong', $this->request);
         self::assertFalse($hasAccess);
     }
 
     public function testPasswordRemember(): void
     {
-        // Mock session behaviour
-        $this->session->expects($this->exactly(1))
-            ->method('set')
-            ->willReturnCallback(function ($key) {
-                $this->sessionKey = $key;
-            });
-
-        $this->session->expects($this->exactly(2))
-            ->method('has')
-            ->willReturnCallback(function ($key) {
-                return $key === $this->sessionKey;
-            });
-
-        // Expect the encoder->isPasswordValid method is called only once
+        // Expect the encoder->verify method is called only once
         $this->encoder->expects($this->exactly(1))
-            ->method('isPasswordValid')
+            ->method('verify')
             ->willReturnCallback(function ($hashedPassword, $givenPassword) {
                 return $hashedPassword === $givenPassword;
             });
@@ -130,28 +114,16 @@ class ViewServiceTest extends TestCase
         $sharedProjectTimesheet = $this->createSharedProjectTimesheet();
         $sharedProjectTimesheet->setPassword('test');
 
-        $this->service->hasAccess($sharedProjectTimesheet, 'test');
-        $this->service->hasAccess($sharedProjectTimesheet, 'test');
+        self::assertFalse($this->service->hasAccess($sharedProjectTimesheet, null, $this->request));
+        self::assertTrue($this->service->hasAccess($sharedProjectTimesheet, 'test', $this->request));
+        self::assertTrue($this->service->hasAccess($sharedProjectTimesheet, null, $this->request));
     }
 
     public function testPasswordChange(): void
     {
-        // Mock session behaviour
-        $this->session->expects($this->exactly(1))
-            ->method('set')
-            ->willReturnCallback(function ($key) {
-                $this->sessionKey = $key;
-            });
-
-        $this->session->expects($this->exactly(2))
-            ->method('has')
-            ->willReturnCallback(function ($key) {
-                return $key === $this->sessionKey;
-            });
-
-        // Expect the encoder->isPasswordValid method is called only once
+        // Expect the encoder->verify method is called only once
         $this->encoder->expects($this->exactly(2))
-            ->method('isPasswordValid')
+            ->method('verify')
             ->willReturnCallback(function ($hashedPassword, $givenPassword) {
                 return $hashedPassword === $givenPassword;
             });
@@ -159,13 +131,13 @@ class ViewServiceTest extends TestCase
         $sharedProjectTimesheet = $this->createSharedProjectTimesheet();
         $sharedProjectTimesheet->setPassword('test');
 
-        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'test');
+        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'test', $this->request);
         self::assertTrue($hasAccess);
 
         $sharedProjectTimesheet = $this->createSharedProjectTimesheet();
         $sharedProjectTimesheet->setPassword('changed');
 
-        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'test');
+        $hasAccess = $this->service->hasAccess($sharedProjectTimesheet, 'test', $this->request);
         self::assertFalse($hasAccess);
     }
 }
