@@ -215,7 +215,7 @@
         <div class="card-header">
             <h3 class="card-title">{{ 'projects'|trans }}</h3>
         </div>
-        <div class="card-body p-0">
+        <div class="card-body{% if projectStats is not empty %} p-0{% endif %}">
             {% if projectStats is empty %}
                 {{ nothing_found() }}
             {% else %}
