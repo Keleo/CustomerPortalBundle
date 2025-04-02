@@ -90,8 +90,17 @@ class ViewService
         if (isset($limitProject)) {
             $query->addProject($limitProject);
         } else {
-            foreach ($this->sharedTimesheetRepository->getProjects($sharedProject) as $project) {
+            $projects = $this->sharedTimesheetRepository->getProjects($sharedProject);
+
+            // this alone fails if it is a customer portal and the customer has no visible projects
+            foreach ($projects as $project) {
                 $query->addProject($project);
+            }
+
+            // so we make sure to include the customer at all times
+            if ($sharedProject->getCustomer() !== null && \count($projects) === 0) {
+                return [];
+                //$query->addCustomer($sharedProject->getCustomer());
             }
         }
 
