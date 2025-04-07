@@ -32,13 +32,15 @@ class TimeRecordTest extends TestCase
      */
     private static function createTimesheet(DateTime $date, User $user, float $hourlyRate, int $duration, ?string $description): Timesheet
     {
-        return (new Timesheet())
-            ->setBegin($date)
-            ->setUser($user)
-            ->setHourlyRate($hourlyRate)
-            ->setRate($hourlyRate * $duration / 60 / 60)
-            ->setDuration($duration)
-            ->setDescription($description);
+        $t = new Timesheet();
+        $t->setBegin($date);
+        $t->setUser($user);
+        $t->setHourlyRate($hourlyRate);
+        $t->setRate($hourlyRate * $duration / 60 / 60);
+        $t->setDuration($duration);
+        $t->setDescription($description);
+
+        return $t;
     }
 
     public function testInvalidTimesheet(): void
