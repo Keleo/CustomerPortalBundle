@@ -82,6 +82,7 @@ class ViewService
         $begin = new DateTime($year . '-' . $month . '-01 00:00:00');
         $end = clone $begin;
         $end->add(new DateInterval('P1M'));
+        $end->sub(new DateInterval('PT1S'));
 
         $query = new TimesheetQuery();
         $query->setBegin($begin);
@@ -165,12 +166,12 @@ class ViewService
     {
         $queryBuilder = $this->timesheetRepository->createQueryBuilder('t')
             ->select([
-                'YEAR(t.begin) as year',
-                'MONTH(t.begin) as month',
+                'YEAR(t.date) as year',
+                'MONTH(t.date) as month',
                 'SUM(t.duration) as duration',
                 'SUM(t.rate) as rate',
             ])
-            ->where('YEAR(t.begin) = :year')
+            ->where('YEAR(t.date) = :year')
             ->groupBy('year')
             ->addGroupBy('month');
 
@@ -227,14 +228,14 @@ class ViewService
     {
         $queryBuilder = $this->timesheetRepository->createQueryBuilder('t')
             ->select([
-                'YEAR(t.begin) as year',
-                'MONTH(t.begin) as month',
-                'DAY(t.begin) as day',
+                'YEAR(t.date) as year',
+                'MONTH(t.date) as month',
+                'DAY(t.date) as day',
                 'SUM(t.duration) as duration',
                 'SUM(t.rate) as rate',
             ])
-            ->where('YEAR(t.begin) = :year')
-            ->andWhere('MONTH(t.begin) = :month')
+            ->where('YEAR(t.date) = :year')
+            ->andWhere('MONTH(t.date) = :month')
             ->groupBy('year')
             ->addGroupBy('month')
             ->addGroupBy('day');
