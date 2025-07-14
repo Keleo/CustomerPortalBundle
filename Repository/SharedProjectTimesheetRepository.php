@@ -12,7 +12,6 @@ namespace KimaiPlugin\CustomerPortalBundle\Repository;
 use App\Entity\Customer;
 use App\Entity\Project;
 use App\Repository\Paginator\QueryPaginator;
-use App\Repository\ProjectRepository;
 use App\Repository\Query\BaseQuery;
 use App\Repository\Query\ProjectQuery;
 use App\Utils\Pagination;
@@ -76,8 +75,7 @@ class SharedProjectTimesheetRepository extends EntityRepository
             throw new \InvalidArgumentException('Unsupported, needs a customer');
         }
 
-        /** @var ProjectRepository $projectRepository */
-        $projectRepository = $this->_em->getRepository(Project::class); // @phpstan-ignore varTag.type
+        $projectRepository = $this->getEntityManager()->getRepository(Project::class);
 
         $query = new ProjectQuery();
         $query->setCustomers([$sharedProject->getCustomer()]);

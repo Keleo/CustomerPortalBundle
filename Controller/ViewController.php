@@ -36,7 +36,10 @@ class ViewController extends AbstractController
     #[Route(path: '/auth/customer-portal/{shareKey}', name: 'customer_portal_view', methods: ['GET', 'POST'])]
     public function indexAction(#[MapEntity(mapping: ['shareKey' => 'shareKey'])] SharedProjectTimesheet $sharedPortal, Request $request): Response
     {
-        $givenPassword = $request->get('spt-password');
+        $givenPassword = $request->request->get('spt-password');
+        if ($givenPassword !== null) {
+            $givenPassword = (string) $givenPassword;
+        }
 
         // Check access.
         if (!$this->viewService->hasAccess($sharedPortal, $givenPassword, $request)) {
@@ -60,7 +63,10 @@ class ViewController extends AbstractController
     #[Route(path: '/auth/customer-portal/{shareKey}/p/{project}', name: 'customer_portal_project', methods: ['GET', 'POST'])]
     public function viewCustomerProjectAction(#[MapEntity(mapping: ['shareKey' => 'shareKey'])] SharedProjectTimesheet $sharedPortal, Project $project, Request $request): Response
     {
-        $givenPassword = $request->get('spt-password');
+        $givenPassword = $request->request->get('spt-password');
+        if ($givenPassword !== null) {
+            $givenPassword = (string) $givenPassword;
+        }
 
         if ($project->getCustomer() !== $sharedPortal->getCustomer()) {
             throw $this->createAccessDeniedException('Requested project does not match customer');
@@ -91,9 +97,9 @@ class ViewController extends AbstractController
             throw $this->createNotFoundException('Invalid portal: Customer not found');
         }
 
-        $year = (int) $request->get('year', date('Y'));
-        $month = (int) $request->get('month', date('m'));
-        $detailsMode = $request->get('details', 'table');
+        $year = (int) $request->query->get('year', date('Y'));
+        $month = (int) $request->query->get('month', date('m'));
+        $detailsMode = $request->query->get('details', 'table');
 
         // Get time records.
         $timeRecords = $this->viewService->getTimeRecords($sharedPortal, $year, $month);
@@ -141,9 +147,9 @@ class ViewController extends AbstractController
 
     private function renderProjectView(SharedProjectTimesheet $sharedProject, Project $project, Request $request): Response
     {
-        $year = (int) $request->get('year', date('Y'));
-        $month = (int) $request->get('month', date('m'));
-        $detailsMode = $request->get('details', 'table');
+        $year = (int) $request->query->get('year', date('Y'));
+        $month = (int) $request->query->get('month', date('m'));
+        $detailsMode = $request->query->get('details', 'table');
         $timeRecords = $this->viewService->getTimeRecords($sharedProject, $year, $month, $project);
 
         // Calculate summary.
