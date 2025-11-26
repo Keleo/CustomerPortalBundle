@@ -262,6 +262,10 @@
                             {% if (portal.isBudgetStatsVisible() or portal.isTimeBudgetStatsVisible()) %}
                                 <th></th>
                             {% endif %}
+                            {% if portal.projectSubTotalsVisible %}
+                                <th class="w-min text-end">{{ 'duration'|trans }}</th>
+                                <th class="w-min">{{ 'total_rate'|trans }}</th>
+                            {% endif %}
                             <th class="w-min"></th>
                         </tr>
                     </thead>
@@ -282,6 +286,23 @@
                                     {% endif %}
                                     {% if stats.hasTimeBudget() and portal.isTimeBudgetStatsVisible() %}
                                         {{ progress.progressbar_timebudget(stats) }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if portal.projectSubTotalsVisible %}
+                                {% set totals = projectTotals[project.getId()] ?? null %}
+                                <td class="text-end">
+                                    {% if totals %}
+                                        {{ totals.duration | duration }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if totals %}
+                                        {{ totals.rate | format_currency(currency) }}
+                                    {% else %}
+                                        -
                                     {% endif %}
                                 </td>
                             {% endif %}

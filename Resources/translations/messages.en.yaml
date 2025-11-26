@@ -17,6 +17,7 @@ shared_project_timesheets:
             statistics_options: Statistics options
             budget_stats_visible: Budget statistics visible
             time_budget_stats_visible: Time budget statistics visible
+            project_sub_totals_visible: Project sub-totals visible
         table:
             record_merge_mode: Merge records
             entry_user_visible: Entry user visible
@@ -26,6 +27,7 @@ shared_project_timesheets:
             show_total_amount_when_entry_rate_hidden: Show total when rate hidden
             annual_chart_visible: Annual chart visible
             monthly_chart_visible: Monthly chart visible
+            project_sub_totals_visible: Project sub-totals visible
 
     view:
         table:

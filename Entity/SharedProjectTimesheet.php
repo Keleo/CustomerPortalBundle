@@ -63,6 +63,9 @@ class SharedProjectTimesheet
     #[ORM\Column(name: 'show_total_amount_when_entry_rate_hidden', type: 'boolean', nullable: false, options: ['default' => true])]
     private bool $showTotalAmountWhenEntryRateHidden = true;
 
+    #[ORM\Column(name: 'project_sub_totals_visible', type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $projectSubTotalsVisible = true;
+
     #[ORM\Column(name: 'record_merge_mode', type: 'string', length: 50, nullable: false)]
     #[Assert\Length(max: 50)]
     private string $recordMergeMode = RecordMergeMode::MODE_NONE;
@@ -177,6 +180,16 @@ class SharedProjectTimesheet
     public function setShowTotalAmountWhenEntryRateHidden(bool $showTotalAmountWhenEntryRateHidden): void
     {
         $this->showTotalAmountWhenEntryRateHidden = $showTotalAmountWhenEntryRateHidden;
+    }
+
+    public function isProjectSubTotalsVisible(): bool
+    {
+        return $this->projectSubTotalsVisible;
+    }
+
+    public function setProjectSubTotalsVisible(bool $projectSubTotalsVisible): void
+    {
+        $this->projectSubTotalsVisible = $projectSubTotalsVisible;
     }
 
     public function hasRecordMerging(): bool

@@ -127,6 +127,23 @@ class ViewController extends AbstractController
         $projects = $this->sharedProjectTimesheetRepository->getProjects($sharedPortal);
         $projectStats = $this->projectStatisticService->getBudgetStatisticModelForProjects($projects, $date);
 
+        // Calculate per-project duration and rate totals for the selected month
+        $projectTotals = [];
+        foreach ($timeRecords as $record) {
+            $project = $record->getProject();
+            if ($project !== null) {
+                $projectId = $project->getId();
+                if (!isset($projectTotals[$projectId])) {
+                    $projectTotals[$projectId] = [
+                        'duration' => 0,
+                        'rate' => 0.0,
+                    ];
+                }
+                $projectTotals[$projectId]['duration'] += $record->getDuration();
+                $projectTotals[$projectId]['rate'] += $record->getRate();
+            }
+        }
+
         return $this->render('@CustomerPortal/view/customer.html.twig', [
             'portal' => $sharedPortal,
             'customer' => $customer,
@@ -142,6 +159,7 @@ class ViewController extends AbstractController
             'detailsMode' => $detailsMode,
             'stats' => $stats,
             'projectStats' => $projectStats,
+            'projectTotals' => $projectTotals,
         ]);
     }
 
