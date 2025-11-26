@@ -8,6 +8,8 @@ shared_project_timesheets:
             table_options: Detailtabelle - Optionen
             entry_user_visible: Benutzer sichtbar
             entry_rate_visible: Kosten sichtbar
+            entry_activity_visible: Aktivität sichtbar
+            entry_tags_visible: Tags sichtbar
             chart_options: Diagramme - Optionen
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
@@ -18,6 +20,8 @@ shared_project_timesheets:
             record_merge_mode: Zeiten zusammenführen
             entry_user_visible: Benutzer sichtbar
             entry_rate_visible: Kosten sichtbar
+            entry_activity_visible: Aktivität sichtbar
+            entry_tags_visible: Tags sichtbar
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
 

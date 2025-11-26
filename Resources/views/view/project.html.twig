@@ -151,8 +151,14 @@
                             {% if portal.entryUserVisible %}
                             <th>{{ 'user' | trans }}</th>
                             {% endif %}
+                            {% if portal.entryActivityVisible %}
+                            <th>{{ 'activity' | trans }}</th>
+                            {% endif %}
                             <th>{{ 'description' | trans }}</th>
-                            <th class="w-min">{{ 'duration'|trans }}</th>
+                            {% if portal.entryTagsVisible %}
+                            <th>{{ 'tags' | trans }}</th>
+                            {% endif %}
+                            <th class="w-min text-end">{{ 'duration'|trans }}</th>
                             {% if portal.entryRateVisible %}
                             <th class="w-min">{{ 'hourlyRate' | trans }}</th>
                             <th class="w-min">{{ 'total_rate' | trans }}</th>
@@ -165,8 +171,22 @@
                             {% if portal.entryUserVisible %}
                                 <td>{{ record.user.displayName }}</td>
                             {% endif %}
+                            {% if portal.entryActivityVisible %}
+                                <td>{{ record.activityName }}</td>
+                            {% endif %}
                             <td>{{ record.description | e | nl2br }}</td>
-                            <td>{{ record.duration | duration }}</td>
+                            {% if portal.entryTagsVisible %}
+                                <td>
+                                    {% if record.tags is not empty %}
+                                        {% for tag in record.tags %}
+                                            <span class="badge bg-secondary" style="background-color: rgba(var(--tblr-secondary-rgb), 0.1) !important;">
+                                                <span style="display: inline-block; width: 10px; height: 10px; background-color: {{ tag.color|default('#6c757d') }}; margin-right: 5px; vertical-align: middle;"></span>{{ tag.name }}
+                                            </span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            <td class="text-end">{{ record.duration | duration }}</td>
                             {% if portal.entryRateVisible %}
                                 {% if record.differentHourlyRates %}
                                     <td>
@@ -192,8 +212,20 @@
                             {% if portal.entryUserVisible %}
                             <td></td>
                             {% endif %}
+                            {% if portal.entryActivityVisible %}
                             <td></td>
-                            <td>{{ durationSum | duration }}</td>
+                            {% endif %}
+                            <td></td>
+                            {% if portal.entryTagsVisible %}
+                            <td></td>
+                            {% endif %}
+                            <td class="text-end">
+                                {% if portal.entryRateVisible %}
+                                    {{ durationSum | duration }}
+                                {% else %}
+                                    {{ durationSum | duration }}<br>{{ rateSum | format_currency(currency) }}
+                                {% endif %}
+                            </td>
                             {% if portal.entryRateVisible %}
                             <td></td>
                             <td>{{ rateSum | format_currency(currency) }}</td>

@@ -305,4 +305,202 @@ class TimeRecordTest extends TestCase
         self::assertEquals($secondRecordHourlyRate, $timeRecord->getHourlyRates()[1]['hourlyRate']);
         self::assertEquals($secondRecordDuration, $timeRecord->getHourlyRates()[1]['duration']);
     }
+
+    public function testActivityNameExtraction(): void
+    {
+        $activity = $this->createMock(\App\Entity\Activity::class);
+        $activity->method('getName')->willReturn('Development');
+
+        $timesheet = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc');
+        $timesheet->setActivity($activity);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet);
+
+        self::assertEquals('Development', $timeRecord->getActivityName());
+    }
+
+    public function testActivityMergeModeDefault(): void
+    {
+        $activity1 = $this->createMock(\App\Entity\Activity::class);
+        $activity1->method('getName')->willReturn('Development');
+
+        $activity2 = $this->createMock(\App\Entity\Activity::class);
+        $activity2->method('getName')->willReturn('Testing');
+
+        $timesheet1 = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc1');
+        $timesheet1->setActivity($activity1);
+
+        $timesheet2 = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc2');
+        $timesheet2->setActivity($activity2);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet1);
+        $timeRecord->addTimesheet($timesheet2);
+
+        self::assertEquals('Development, Testing', $timeRecord->getActivityName());
+    }
+
+    public function testActivityMergeModeUseFirst(): void
+    {
+        $activity1 = $this->createMock(\App\Entity\Activity::class);
+        $activity1->method('getName')->willReturn('Development');
+
+        $activity2 = $this->createMock(\App\Entity\Activity::class);
+        $activity2->method('getName')->willReturn('Testing');
+
+        $timesheet1 = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc1');
+        $timesheet1->setActivity($activity1);
+
+        $timesheet2 = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc2');
+        $timesheet2->setActivity($activity2);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet1, RecordMergeMode::MODE_MERGE_USE_FIRST_OF_DAY);
+        $timeRecord->addTimesheet($timesheet2);
+
+        self::assertEquals('Development', $timeRecord->getActivityName());
+    }
+
+    public function testActivityMergeModeUseLast(): void
+    {
+        $activity1 = $this->createMock(\App\Entity\Activity::class);
+        $activity1->method('getName')->willReturn('Development');
+
+        $activity2 = $this->createMock(\App\Entity\Activity::class);
+        $activity2->method('getName')->willReturn('Testing');
+
+        $date1 = new DateTime('2025-01-01 09:00:00');
+        $date2 = new DateTime('2025-01-01 14:00:00');
+
+        $timesheet1 = self::createTimesheet($date1, new User(), 100, 3600, 'desc1');
+        $timesheet1->setActivity($activity1);
+
+        $timesheet2 = self::createTimesheet($date2, new User(), 100, 3600, 'desc2');
+        $timesheet2->setActivity($activity2);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet1, RecordMergeMode::MODE_MERGE_USE_LAST_OF_DAY);
+        $timeRecord->addTimesheet($timesheet2);
+
+        self::assertEquals('Testing', $timeRecord->getActivityName());
+    }
+
+    public function testActivitySameNotDuplicated(): void
+    {
+        $activity1 = $this->createMock(\App\Entity\Activity::class);
+        $activity1->method('getName')->willReturn('Development');
+
+        $activity2 = $this->createMock(\App\Entity\Activity::class);
+        $activity2->method('getName')->willReturn('Development');
+
+        $timesheet1 = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc1');
+        $timesheet1->setActivity($activity1);
+
+        $timesheet2 = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc2');
+        $timesheet2->setActivity($activity2);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet1);
+        $timeRecord->addTimesheet($timesheet2);
+
+        self::assertEquals('Development', $timeRecord->getActivityName());
+    }
+
+    public function testTagsExtraction(): void
+    {
+        $tag1 = $this->createMock(\App\Entity\Tag::class);
+        $tag1->method('getName')->willReturn('urgent');
+        $tag1->method('getColor')->willReturn('#ff0000');
+
+        $tag2 = $this->createMock(\App\Entity\Tag::class);
+        $tag2->method('getName')->willReturn('billable');
+        $tag2->method('getColor')->willReturn('#00ff00');
+
+        $tags = new \Doctrine\Common\Collections\ArrayCollection([$tag1, $tag2]);
+
+        $timesheetMock = $this->getMockBuilder(\App\Entity\Timesheet::class)
+            ->onlyMethods(['getTags'])
+            ->getMock();
+        $timesheetMock->method('getTags')->willReturn($tags);
+        $timesheetMock->setBegin(new DateTime());
+        $timesheetMock->setUser(new User());
+        $timesheetMock->setHourlyRate(100);
+        $timesheetMock->setRate(100);
+        $timesheetMock->setDuration(3600);
+        $timesheetMock->setDescription('desc');
+
+        $activity = $this->createMock(\App\Entity\Activity::class);
+        $activity->method('getName')->willReturn('Development');
+        $timesheetMock->setActivity($activity);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheetMock);
+
+        $tags = $timeRecord->getTags();
+        self::assertCount(2, $tags);
+        self::assertEquals('billable', $tags[0]->getName());
+        self::assertEquals('urgent', $tags[1]->getName());
+    }
+
+    public function testTagsMergeAccumulatesUniqueTags(): void
+    {
+        // Create tag mocks
+        $tag1 = $this->createMock(\App\Entity\Tag::class);
+        $tag1->method('getName')->willReturn('urgent');
+
+        $tag2 = $this->createMock(\App\Entity\Tag::class);
+        $tag2->method('getName')->willReturn('billable');
+
+        $tag3 = $this->createMock(\App\Entity\Tag::class);
+        $tag3->method('getName')->willReturn('client-x');
+
+        $tags1 = new \Doctrine\Common\Collections\ArrayCollection([$tag1, $tag2]);
+        $tags2 = new \Doctrine\Common\Collections\ArrayCollection([$tag2, $tag3]); // tag2 is duplicate
+
+        $timesheet1Mock = $this->getMockBuilder(\App\Entity\Timesheet::class)
+            ->onlyMethods(['getTags'])
+            ->getMock();
+        $timesheet1Mock->method('getTags')->willReturn($tags1);
+        $timesheet1Mock->setBegin(new DateTime());
+        $timesheet1Mock->setUser(new User());
+        $timesheet1Mock->setHourlyRate(100);
+        $timesheet1Mock->setRate(100);
+        $timesheet1Mock->setDuration(3600);
+        $timesheet1Mock->setDescription('desc1');
+
+        $activity = $this->createMock(\App\Entity\Activity::class);
+        $activity->method('getName')->willReturn('Development');
+        $timesheet1Mock->setActivity($activity);
+
+        $timesheet2Mock = $this->getMockBuilder(\App\Entity\Timesheet::class)
+            ->onlyMethods(['getTags'])
+            ->getMock();
+        $timesheet2Mock->method('getTags')->willReturn($tags2);
+        $timesheet2Mock->setBegin(new DateTime());
+        $timesheet2Mock->setUser(new User());
+        $timesheet2Mock->setHourlyRate(100);
+        $timesheet2Mock->setRate(100);
+        $timesheet2Mock->setDuration(3600);
+        $timesheet2Mock->setDescription('desc2');
+        $timesheet2Mock->setActivity($activity);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet1Mock);
+        $timeRecord->addTimesheet($timesheet2Mock);
+
+        $tags = $timeRecord->getTags();
+        self::assertCount(3, $tags); // unique tags only
+
+        // Tags should be sorted by name
+        self::assertEquals('billable', $tags[0]->getName());
+        self::assertEquals('client-x', $tags[1]->getName());
+        self::assertEquals('urgent', $tags[2]->getName());
+    }
+
+    public function testEmptyTags(): void
+    {
+        $timesheet = self::createTimesheet(new DateTime(), new User(), 100, 3600, 'desc');
+
+        $activity = $this->createMock(\App\Entity\Activity::class);
+        $activity->method('getName')->willReturn('Development');
+        $timesheet->setActivity($activity);
+
+        $timeRecord = TimeRecord::fromTimesheet($timesheet);
+
+        self::assertEmpty($timeRecord->getTags());
+    }
 }

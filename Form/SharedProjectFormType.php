@@ -71,6 +71,14 @@ class SharedProjectFormType extends AbstractType
                         'label' => 'shared_project_timesheets.manage.form.entry_rate_visible',
                         'required' => false,
                     ])
+                    ->add('entryActivityVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.entry_activity_visible',
+                        'required' => false,
+                    ])
+                    ->add('entryTagsVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.entry_tags_visible',
+                        'required' => false,
+                    ])
             )
             ->add(
                 $builder
