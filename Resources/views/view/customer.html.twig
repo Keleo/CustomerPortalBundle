@@ -275,6 +275,8 @@
                             set project_url = url('customer_portal_project', {
                                 'shareKey': portal.shareKey,
                                 'project': project.getId(),
+                                'year': year,
+                                'month': month,
                             })
                         %}
                         <tr class="alternative-link" data-href="{{ project_url }}">

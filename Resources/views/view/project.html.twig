@@ -74,7 +74,12 @@
             </a>
         </div>
 
-        <span class="ps-2">{{ project.name }}</span>
+        <span class="ps-2">
+            {% if project.customer and portal.customer %}
+                <a href="{{ url('customer_portal_view', {shareKey: portal.shareKey, year: year, month: month}) }}" class="text-decoration-underline">{{ project.customer.name }}</a><span class="text-body-secondary ps-3 pe-2"><i class="fa fa-caret-right"></i></span>
+            {% endif %}
+            {{ project.name }}
+        </span>
     </h2>
 
     {% if show_month_stats %}
