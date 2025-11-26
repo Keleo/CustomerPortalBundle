@@ -223,7 +223,11 @@
                                 {% if portal.entryRateVisible %}
                                     {{ durationSum | duration }}
                                 {% else %}
-                                    {{ durationSum | duration }}<br>{{ rateSum | format_currency(currency) }}
+                                    {% if portal.showTotalAmountWhenEntryRateHidden %}
+                                        {{ durationSum | duration }}<br>{{ rateSum | format_currency(currency) }}
+                                    {% else %}
+                                        {{ durationSum | duration }}
+                                    {% endif %}
                                 {% endif %}
                             </td>
                             {% if portal.entryRateVisible %}

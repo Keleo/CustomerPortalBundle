@@ -10,6 +10,7 @@ shared_project_timesheets:
             entry_rate_visible: Kosten sichtbar
             entry_activity_visible: Aktivität sichtbar
             entry_tags_visible: Tags sichtbar
+            show_total_amount_when_entry_rate_hidden: Gesamtbetrag anzeigen, wenn Eingabesatz ausgeblendet ist
             chart_options: Diagramme - Optionen
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
@@ -22,6 +23,7 @@ shared_project_timesheets:
             entry_rate_visible: Kosten sichtbar
             entry_activity_visible: Aktivität sichtbar
             entry_tags_visible: Tags sichtbar
+            show_total_amount_when_entry_rate_hidden: Summe anzeigen wenn Satz verborgen
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
 
