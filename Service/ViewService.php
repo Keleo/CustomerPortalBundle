@@ -178,25 +178,22 @@ class ViewService
         if (isset($limitProject)) {
             $queryBuilder = $queryBuilder
                 ->andWhere('t.project = :project')
-                ->setParameters([
-                    'project' => $limitProject,
-                    'year' => $year,
-                ]);
+                ->setParameter('project', $limitProject)
+                ->setParameter('year', $year)
+            ;
         } elseif ($sharedProject->getProject() !== null) {
             $queryBuilder = $queryBuilder
                 ->andWhere('t.project = :project')
-                ->setParameters([
-                    'project' => $sharedProject->getProject(),
-                    'year' => $year,
-                ]);
+                ->setParameter('project', $sharedProject->getProject())
+                ->setParameter('year', $year)
+            ;
         } else {
             $queryBuilder = $queryBuilder
                 ->innerJoin('t.project', 'p')
                 ->andWhere('p.customer = :customer')
-                ->setParameters([
-                    'customer' => $sharedProject->getCustomer(),
-                    'year' => $year,
-                ]);
+                ->setParameter('customer', $sharedProject->getCustomer())
+                ->setParameter('year', $year)
+            ;
         }
 
         $result = $queryBuilder
@@ -243,28 +240,25 @@ class ViewService
         if (isset($limitProject)) {
             $queryBuilder = $queryBuilder
                 ->andWhere('t.project = :project')
-                ->setParameters([
-                    'project' => $limitProject,
-                    'year' => $year,
-                    'month' => $month,
-                ]);
+                ->setParameter('project', $limitProject)
+                ->setParameter('year', $year)
+                ->setParameter('month', $month)
+            ;
         } elseif ($sharedProject->getProject() !== null) {
             $queryBuilder = $queryBuilder
                 ->andWhere('t.project = :project')
-                ->setParameters([
-                    'project' => $sharedProject->getProject(),
-                    'year' => $year,
-                    'month' => $month,
-                ]);
+                ->setParameter('project', $sharedProject->getProject())
+                ->setParameter('year', $year)
+                ->setParameter('month', $month)
+            ;
         } else {
             $queryBuilder = $queryBuilder
                 ->innerJoin('t.project', 'p')
                 ->andWhere('p.customer = :customer')
-                ->setParameters([
-                    'customer' => $sharedProject->getCustomer(),
-                    'year' => $year,
-                    'month' => $month,
-                ]);
+                ->setParameter('customer', $sharedProject->getCustomer())
+                ->setParameter('year', $year)
+                ->setParameter('month', $month)
+            ;
         }
 
         $result = $queryBuilder
