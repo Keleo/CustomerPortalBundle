@@ -23,7 +23,7 @@ use KimaiPlugin\CustomerPortalBundle\Repository\SharedProjectTimesheetRepository
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 
 class ViewService
 {
@@ -32,7 +32,7 @@ class ViewService
         private readonly RequestStack $request,
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         private readonly SharedProjectTimesheetRepository $sharedTimesheetRepository,
-        private readonly RateLimiterFactory $customerPortalLimiter
+        private readonly RateLimiterFactoryInterface $customerPortalLimiter
     )
     {
     }
