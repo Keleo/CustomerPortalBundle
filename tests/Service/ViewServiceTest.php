@@ -31,7 +31,6 @@ class ViewServiceTest extends TestCase
     private ViewService $service;
     private SessionInterface $session;
     private PasswordHasherInterface|MockObject $encoder;
-    private string $sessionKey;
     private Request $request;
 
     protected function setUp(): void
