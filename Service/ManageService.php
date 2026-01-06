@@ -24,7 +24,7 @@ class ManageService
     {
     }
 
-    public function create(SharedProjectTimesheet $sharedPortal, ?string $password = null): SharedProjectTimesheet
+    public function create(SharedProjectTimesheet $sharedPortal, #[\SensitiveParameter] ?string $password = null): SharedProjectTimesheet
     {
         if ($sharedPortal->getShareKey() === null) {
             $i = 0;
@@ -43,7 +43,7 @@ class ManageService
         return $this->update($sharedPortal, $password);
     }
 
-    public function update(SharedProjectTimesheet $sharedProjectTimesheet, ?string $newPassword = null): SharedProjectTimesheet
+    public function update(SharedProjectTimesheet $sharedProjectTimesheet, #[\SensitiveParameter] ?string $newPassword = null): SharedProjectTimesheet
     {
         // Check if updatable
         if ($sharedProjectTimesheet->getShareKey() === null) {

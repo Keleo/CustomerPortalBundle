@@ -40,7 +40,7 @@ class ViewService
     /**
      * Check if the user has access to the given shared project timesheet.
      */
-    public function hasAccess(SharedProjectTimesheet $sharedProject, ?string $givenPassword, Request $request): bool
+    public function hasAccess(SharedProjectTimesheet $sharedProject, #[\SensitiveParameter] ?string $givenPassword, Request $request): bool
     {
         $hashedPassword = $sharedProject->getPassword();
 
