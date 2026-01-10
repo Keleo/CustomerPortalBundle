@@ -3,7 +3,7 @@
 # bin/console doctrine:migrations:diff --em=default --configuration=var/plugins/CustomerPortalBundle/Migrations/doctrine_migrations.yaml
 #
 # Execute all migrations with:
-# bin/console kimai:bundle:shared-project-timesheets:install
+# bin/console kimai:bundle:customer-portal:install
 # bin/console doctrine:migrations:migrate --em=default --configuration=var/plugins/CustomerPortalBundle/Migrations/doctrine_migrations.yaml
 # --------------------------------------------------------------------------------------------------
 
