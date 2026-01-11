@@ -8,18 +8,26 @@ shared_project_timesheets:
             table_options: Detailtabelle - Optionen
             entry_user_visible: Benutzer sichtbar
             entry_rate_visible: Kosten sichtbar
+            entry_activity_visible: Aktivität sichtbar
+            entry_tags_visible: Tags sichtbar
+            show_total_amount_when_entry_rate_hidden: Gesamtbetrag anzeigen, wenn Eingabesatz ausgeblendet ist
             chart_options: Diagramme - Optionen
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
             statistics_options: Projektstatistiken - Optionen
             budget_stats_visible: Budgetstatistiken sichtbar
             time_budget_stats_visible: Zeitbudgetstatistiken sichtbar
+            project_sub_totals_visible: Projekt-Zwischensummen sichtbar
         table:
             record_merge_mode: Zeiten zusammenführen
             entry_user_visible: Benutzer sichtbar
             entry_rate_visible: Kosten sichtbar
+            entry_activity_visible: Aktivität sichtbar
+            entry_tags_visible: Tags sichtbar
+            show_total_amount_when_entry_rate_hidden: Summe anzeigen wenn Satz verborgen
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar
+            project_sub_totals_visible: Projekt-Zwischensummen sichtbar
 
     view:
         table:

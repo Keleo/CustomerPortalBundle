@@ -67,8 +67,24 @@ class SharedProjectFormType extends AbstractType
                         'label' => 'shared_project_timesheets.manage.form.entry_user_visible',
                         'required' => false,
                     ])
+                    ->add('entryActivityVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.entry_activity_visible',
+                        'required' => false,
+                    ])
+                    ->add('entryTagsVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.entry_tags_visible',
+                        'required' => false,
+                    ])
                     ->add('entryRateVisible', YesNoType::class, [
                         'label' => 'shared_project_timesheets.manage.form.entry_rate_visible',
+                        'required' => false,
+                    ])
+                    ->add('showTotalAmountWhenEntryRateHidden', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.show_total_amount_when_entry_rate_hidden',
+                        'required' => false,
+                    ])
+                    ->add('projectSubTotalsVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.project_sub_totals_visible',
                         'required' => false,
                     ])
             )
