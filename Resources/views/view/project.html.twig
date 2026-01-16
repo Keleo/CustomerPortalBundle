@@ -34,7 +34,7 @@
 
         <div class="btn-group pe-2">
             <a class="btn btn-default{% if month <= 1 %} disabled{% endif %}"
-               {% if month > 1 %}href="{{ app.request.pathinfo }}?year={{ year }}&month={{ month - 1 }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}"{% endif %}>
+               {% if month > 1 %}href="?year={{ year }}&month={{ month - 1 }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}"{% endif %}>
                 <i class="fa fa-caret-left"></i>
             </a>
             <div class="btn-group" role="group">
@@ -45,18 +45,18 @@
                 <ul class="dropdown-menu dropdown-menu-start pre-scrollable">
                     {% for i in 1..12 %}
                         {% set tmpMonth = report_date(year, i) %}
-                        <li><a href="{{ app.request.pathinfo }}?year={{ year }}&month={{ i }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}" class="dropdown-item {{ i == month ? 'active' : '' }}">{{ tmpMonth|month_name }}</a></li>
+                        <li><a href="?year={{ year }}&month={{ i }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}" class="dropdown-item {{ i == month ? 'active' : '' }}">{{ tmpMonth|month_name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
             <a class="btn btn-default{% if month >= 12 %} disabled{% endif %}"
-               {% if month < 12 %}href="{{ app.request.pathinfo }}?year={{ year }}&month={{ month + 1 }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}"{% endif %}>
+               {% if month < 12 %}href="?year={{ year }}&month={{ month + 1 }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}"{% endif %}>
                 <i class="fa fa-caret-right"></i>
             </a>
         </div>
 
         <div class="btn-group select-container">
-            <a class="btn btn-default" href="{{ app.request.pathinfo }}?year={{ year - 1 }}&month={{ month }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}">
+            <a class="btn btn-default" href="?year={{ year - 1 }}&month={{ month }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}">
                 <i class="fa fa-caret-left"></i>
             </a>
             <div class="btn-group select-container">
@@ -65,11 +65,11 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-start pre-scrollable">
                     {% for i in (year - 5)..(year + 5) %}
-                        <li><a href="{{ app.request.pathinfo }}?year={{ i }}&month={{ month }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}" class="dropdown-item {{ i == year ? 'active' : '' }}"> {{ i }} </a></li>
+                        <li><a href="?year={{ i }}&month={{ month }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}" class="dropdown-item {{ i == year ? 'active' : '' }}"> {{ i }} </a></li>
                     {% endfor %}
                 </ul>
             </div>
-            <a class="btn btn-default" href="{{ app.request.pathinfo }}?year={{ year + 1 }}&month={{ month }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}">
+            <a class="btn btn-default" href="?year={{ year + 1 }}&month={{ month }}{% if detailsMode != 'table' %}&details={{ detailsMode }}{% endif %}">
                 <i class="fa fa-caret-right"></i>
             </a>
         </div>
