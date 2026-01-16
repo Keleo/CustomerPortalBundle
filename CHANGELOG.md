@@ -3,6 +3,7 @@
 Compatibility: requires minimum Kimai 3.0.0
 
 - Compatibility with Symfony 7.4
+- Fix `Chart` was initialized before Kimai 
 
 ## Version 4.6.0
 
