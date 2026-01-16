@@ -41,8 +41,7 @@ class ManageController extends AbstractController
 
         $sharedProjects = $this->shareProjectTimesheetRepository->findAllSharedProjects($query);
 
-        $table = new DataTable('shared_project_timesheets_manage', $query);
-        $table->setPagination($sharedProjects);
+        $table = new DataTable('shared_project_timesheets_manage', $query, $sharedProjects);
         $table->setReloadEvents('kimai.sharedProject');
 
         $table->addColumn('type', ['class' => 'alwaysVisible w-min', 'orderBy' => false]);

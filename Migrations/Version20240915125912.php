@@ -40,7 +40,7 @@ final class Version20240915125912 extends AbstractMigration
         $table->addForeignKeyConstraint('kimai2_projects', ['project_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_7747AE6B166D1F9C');
         $table->addForeignKeyConstraint('kimai2_customers', ['customer_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_7747AE6B9395C3F3');
 
-        $table->setPrimaryKey(['id']);
+        $this->addPrimaryKeyConstraint($table, ['id']);
         $table->addUniqueIndex(['share_key']);
     }
 
