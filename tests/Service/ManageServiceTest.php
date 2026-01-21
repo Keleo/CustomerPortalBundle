@@ -44,6 +44,8 @@ class ManageServiceTest extends TestCase
         $sharedProjectTimesheet->setRecordMergeMode(RecordMergeMode::MODE_MERGE);
         $sharedProjectTimesheet->setEntryUserVisible(true);
         $sharedProjectTimesheet->setEntryRateVisible(true);
+        $sharedProjectTimesheet->setShowTotalAmountWhenEntryRateHidden(false);
+        $sharedProjectTimesheet->setProjectSubTotalsVisible(false);
         $sharedProjectTimesheet->setAnnualChartVisible(true);
         $sharedProjectTimesheet->setMonthlyChartVisible(true);
 
@@ -55,6 +57,8 @@ class ManageServiceTest extends TestCase
         self::assertEquals(RecordMergeMode::MODE_MERGE, $saved->getRecordMergeMode());
         self::assertTrue($saved->isEntryUserVisible());
         self::assertTrue($saved->isEntryRateVisible());
+        self::assertFalse($saved->isShowTotalAmountWhenEntryRateHidden());
+        self::assertFalse($saved->isProjectSubTotalsVisible());
         self::assertTrue($saved->isAnnualChartVisible());
         self::assertTrue($saved->isMonthlyChartVisible());
     }
@@ -68,6 +72,8 @@ class ManageServiceTest extends TestCase
         self::assertEquals(RecordMergeMode::MODE_NONE, $sharedProjectTimesheet->getRecordMergeMode());
         self::assertFalse($sharedProjectTimesheet->isEntryUserVisible());
         self::assertFalse($sharedProjectTimesheet->isEntryRateVisible());
+        self::assertTrue($sharedProjectTimesheet->isShowTotalAmountWhenEntryRateHidden());
+        self::assertTrue($sharedProjectTimesheet->isProjectSubTotalsVisible());
         self::assertFalse($sharedProjectTimesheet->isAnnualChartVisible());
         self::assertFalse($sharedProjectTimesheet->isMonthlyChartVisible());
     }
@@ -97,6 +103,8 @@ class ManageServiceTest extends TestCase
         $sharedProjectTimesheet->setRecordMergeMode(RecordMergeMode::MODE_MERGE);
         $sharedProjectTimesheet->setEntryUserVisible(true);
         $sharedProjectTimesheet->setEntryRateVisible(true);
+        $sharedProjectTimesheet->setShowTotalAmountWhenEntryRateHidden(true);
+        $sharedProjectTimesheet->setProjectSubTotalsVisible(true);
         $sharedProjectTimesheet->setAnnualChartVisible(true);
         $sharedProjectTimesheet->setMonthlyChartVisible(true);
 
@@ -108,6 +116,8 @@ class ManageServiceTest extends TestCase
         self::assertEquals(RecordMergeMode::MODE_MERGE, $saved->getRecordMergeMode());
         self::assertTrue($saved->isEntryUserVisible());
         self::assertTrue($saved->isEntryRateVisible());
+        self::assertTrue($saved->isShowTotalAmountWhenEntryRateHidden());
+        self::assertTrue($saved->isProjectSubTotalsVisible());
         self::assertTrue($saved->isAnnualChartVisible());
         self::assertTrue($saved->isMonthlyChartVisible());
     }
@@ -144,5 +154,47 @@ class ManageServiceTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->service->update(new SharedProjectTimesheet());
+    }
+
+    public function testShowTotalAmountWhenEntryRateHiddenConfiguration(): void
+    {
+        $sharedProjectTimesheet = new SharedProjectTimesheet();
+        $sharedProjectTimesheet->setProject(new Project());
+
+        // Test default is true
+        self::assertTrue($sharedProjectTimesheet->isShowTotalAmountWhenEntryRateHidden());
+
+        // Test setting to false
+        $sharedProjectTimesheet->setShowTotalAmountWhenEntryRateHidden(false);
+        self::assertFalse($sharedProjectTimesheet->isShowTotalAmountWhenEntryRateHidden());
+
+        // Test setting back to true
+        $sharedProjectTimesheet->setShowTotalAmountWhenEntryRateHidden(true);
+        self::assertTrue($sharedProjectTimesheet->isShowTotalAmountWhenEntryRateHidden());
+
+        // Test persistence through service
+        $saved = $this->service->create($sharedProjectTimesheet, null);
+        self::assertTrue($saved->isShowTotalAmountWhenEntryRateHidden());
+    }
+
+    public function testProjectSubTotalsVisibleConfiguration(): void
+    {
+        $sharedProjectTimesheet = new SharedProjectTimesheet();
+        $sharedProjectTimesheet->setProject(new Project());
+
+        // Test default is true
+        self::assertTrue($sharedProjectTimesheet->isProjectSubTotalsVisible());
+
+        // Test setting to false
+        $sharedProjectTimesheet->setProjectSubTotalsVisible(false);
+        self::assertFalse($sharedProjectTimesheet->isProjectSubTotalsVisible());
+
+        // Test setting back to true
+        $sharedProjectTimesheet->setProjectSubTotalsVisible(true);
+        self::assertTrue($sharedProjectTimesheet->isProjectSubTotalsVisible());
+
+        // Test persistence through service
+        $saved = $this->service->create($sharedProjectTimesheet, null);
+        self::assertTrue($saved->isProjectSubTotalsVisible());
     }
 }
