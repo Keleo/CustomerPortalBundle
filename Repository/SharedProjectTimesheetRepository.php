@@ -24,6 +24,9 @@ use KimaiPlugin\CustomerPortalBundle\Entity\SharedProjectTimesheet;
  */
 class SharedProjectTimesheetRepository extends EntityRepository
 {
+    /**
+     * @return Pagination<SharedProjectTimesheet>
+     */
     public function findAllSharedProjects(BaseQuery $baseQuery): Pagination
     {
         $query = $this->createQueryBuilder('spt')

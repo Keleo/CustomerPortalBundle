@@ -6,7 +6,8 @@
     <canvas id="{{ chartId }}" style="height: {{ config('theme.chart.height') }}px;"></canvas>
 </div>
 
-<script type="text/javascript">
+<script>
+document.addEventListener('kimai.initialized', function() {
     new Chart(document.getElementById('{{ chartId }}').getContext('2d'), {
         type: 'bar',
         data: {
@@ -59,4 +60,5 @@
             },
         },
     });
+});
 </script>
