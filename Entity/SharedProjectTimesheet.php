@@ -54,6 +54,18 @@ class SharedProjectTimesheet
     #[ORM\Column(name: 'entry_rate_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $entryRateVisible = false;
 
+    #[ORM\Column(name: 'entry_activity_visible', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $entryActivityVisible = false;
+
+    #[ORM\Column(name: 'entry_tags_visible', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $entryTagsVisible = false;
+
+    #[ORM\Column(name: 'show_total_amount_when_entry_rate_hidden', type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $showTotalAmountWhenEntryRateHidden = true;
+
+    #[ORM\Column(name: 'project_sub_totals_visible', type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $projectSubTotalsVisible = true;
+
     #[ORM\Column(name: 'record_merge_mode', type: 'string', length: 50, nullable: false)]
     #[Assert\Length(max: 50)]
     private string $recordMergeMode = RecordMergeMode::MODE_NONE;
@@ -138,6 +150,46 @@ class SharedProjectTimesheet
     public function setEntryRateVisible(bool $entryRateVisible): void
     {
         $this->entryRateVisible = $entryRateVisible;
+    }
+
+    public function isEntryActivityVisible(): bool
+    {
+        return $this->entryActivityVisible;
+    }
+
+    public function setEntryActivityVisible(bool $entryActivityVisible): void
+    {
+        $this->entryActivityVisible = $entryActivityVisible;
+    }
+
+    public function isEntryTagsVisible(): bool
+    {
+        return $this->entryTagsVisible;
+    }
+
+    public function setEntryTagsVisible(bool $entryTagsVisible): void
+    {
+        $this->entryTagsVisible = $entryTagsVisible;
+    }
+
+    public function isShowTotalAmountWhenEntryRateHidden(): bool
+    {
+        return $this->showTotalAmountWhenEntryRateHidden;
+    }
+
+    public function setShowTotalAmountWhenEntryRateHidden(bool $showTotalAmountWhenEntryRateHidden): void
+    {
+        $this->showTotalAmountWhenEntryRateHidden = $showTotalAmountWhenEntryRateHidden;
+    }
+
+    public function isProjectSubTotalsVisible(): bool
+    {
+        return $this->projectSubTotalsVisible;
+    }
+
+    public function setProjectSubTotalsVisible(bool $projectSubTotalsVisible): void
+    {
+        $this->projectSubTotalsVisible = $projectSubTotalsVisible;
     }
 
     public function hasRecordMerging(): bool

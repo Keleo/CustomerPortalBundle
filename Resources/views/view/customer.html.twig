@@ -152,8 +152,14 @@
                             <th>{{ 'user' | trans }}</th>
                             {% endif %}
                             <th>{{ 'project' | trans }}</th>
+                            {% if portal.entryActivityVisible %}
+                            <th>{{ 'activity' | trans }}</th>
+                            {% endif %}
                             <th>{{ 'description' | trans }}</th>
-                            <th class="w-min">{{ 'duration'|trans }}</th>
+                            {% if portal.entryTagsVisible %}
+                            <th>{{ 'tags' | trans }}</th>
+                            {% endif %}
+                            <th class="w-min text-end">{{ 'duration'|trans }}</th>
                             {% if portal.entryRateVisible %}
                             <th class="w-min">{{ 'hourlyRate' | trans }}</th>
                             <th class="w-min">{{ 'total_rate' | trans }}</th>
@@ -167,8 +173,22 @@
                                 <td>{{ record.user.displayName }}</td>
                             {% endif %}
                             <td>{{ record.getProject.name }}</td>
+                            {% if portal.entryActivityVisible %}
+                                <td>{{ record.activityName }}</td>
+                            {% endif %}
                             <td>{{ record.description | e | nl2br }}</td>
-                            <td>{{ record.duration | duration }}</td>
+                            {% if portal.entryTagsVisible %}
+                                <td>
+                                    {% if record.tags is not empty %}
+                                        {% for tag in record.tags %}
+                                            <span class="badge bg-secondary" style="background-color: rgba(var(--tblr-secondary-rgb), 0.1) !important;">
+                                                <span style="display: inline-block; width: 10px; height: 10px; background-color: {{ tag.color|default('#6c757d') }}; margin-right: 5px; vertical-align: middle;"></span>{{ tag.name }}
+                                            </span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            <td class="text-end">{{ record.duration | duration }}</td>
                             {% if portal.entryRateVisible %}
                                 {% if record.differentHourlyRates %}
                                     <td>
@@ -195,8 +215,24 @@
                             <td></td>
                             {% endif %}
                             <td></td>
+                            {% if portal.entryActivityVisible %}
                             <td></td>
-                            <td>{{ durationSum | duration }}</td>
+                            {% endif %}
+                            <td></td>
+                            {% if portal.entryTagsVisible %}
+                            <td></td>
+                            {% endif %}
+                            <td class="text-end">
+                                {% if portal.entryRateVisible %}
+                                    {{ durationSum | duration }}
+                                {% else %}
+                                    {% if portal.showTotalAmountWhenEntryRateHidden %}
+                                        {{ durationSum | duration }}<br>{{ rateSum | format_currency(currency) }}
+                                    {% else %}
+                                        {{ durationSum | duration }}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
                             {% if portal.entryRateVisible %}
                             <td></td>
                             <td>{{ rateSum | format_currency(currency) }}</td>
@@ -226,6 +262,10 @@
                             {% if (portal.isBudgetStatsVisible() or portal.isTimeBudgetStatsVisible()) %}
                                 <th></th>
                             {% endif %}
+                            {% if portal.projectSubTotalsVisible %}
+                                <th class="w-min text-end">{{ 'duration'|trans }}</th>
+                                <th class="w-min">{{ 'total_rate'|trans }}</th>
+                            {% endif %}
                             <th class="w-min"></th>
                         </tr>
                     </thead>
@@ -235,6 +275,8 @@
                             set project_url = url('customer_portal_project', {
                                 'shareKey': portal.shareKey,
                                 'project': project.getId(),
+                                'year': year,
+                                'month': month,
                             })
                         %}
                         <tr class="alternative-link" data-href="{{ project_url }}">
@@ -246,6 +288,23 @@
                                     {% endif %}
                                     {% if stats.hasTimeBudget() and portal.isTimeBudgetStatsVisible() %}
                                         {{ progress.progressbar_timebudget(stats) }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if portal.projectSubTotalsVisible %}
+                                {% set totals = projectTotals[project.getId()] ?? null %}
+                                <td class="text-end">
+                                    {% if totals %}
+                                        {{ totals.duration | duration }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if totals %}
+                                        {{ totals.rate | format_currency(currency) }}
+                                    {% else %}
+                                        -
                                     {% endif %}
                                 </td>
                             {% endif %}

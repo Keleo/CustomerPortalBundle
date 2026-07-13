@@ -33,6 +33,11 @@ class TimeRecord
     private float $rate = 0.0;
     private int $duration = 0;
     private ?Project $project = null;
+    private ?string $activityName = null;
+    /**
+     * @var array<\App\Entity\Tag>
+     */
+    private array $tags = [];
 
     private function __construct(
         private readonly \DateTimeInterface $date,
@@ -99,6 +104,19 @@ class TimeRecord
         return $this->user;
     }
 
+    public function getActivityName(): ?string
+    {
+        return $this->activityName;
+    }
+
+    /**
+     * @return array<\App\Entity\Tag>
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
     // Helper methods
 
     public function hasDifferentHourlyRates(): bool
@@ -112,6 +130,8 @@ class TimeRecord
         $this->addRate($timesheet->getRate());
         $this->addDuration($timesheet->getDuration());
         $this->setDescription($timesheet);
+        $this->setActivity($timesheet);
+        $this->addTags($timesheet);
     }
 
     public function getProject(): ?Project
@@ -181,5 +201,62 @@ class TimeRecord
     protected function setProject(Project $project): void
     {
         $this->project = $project;
+    }
+
+    protected function setActivity(Timesheet $timesheet): void
+    {
+        $activity = $timesheet->getActivity();
+
+        if ($activity === null) {
+            return;
+        }
+
+        $activityName = $activity->getName();
+
+        // Activity merge logic follows description pattern
+        if ($this->activityName === null) {
+            // First timesheet - set activity
+            $this->activityName = $activityName;
+        } elseif ($this->mergeMode === RecordMergeMode::MODE_MERGE_USE_LAST_OF_DAY && $this->getDate() < $timesheet->getBegin()) {
+            // Use last activity (override)
+            $this->activityName = $activityName;
+        } elseif ($this->mergeMode === RecordMergeMode::MODE_MERGE) {
+            // Concatenate different activities
+            if ($this->activityName !== $activityName) {
+                $this->activityName = implode(', ', array_unique([
+                    $this->activityName,
+                    $activityName
+                ]));
+            }
+        }
+        // MODE_MERGE_USE_FIRST_OF_DAY: keep first (already set)
+    }
+
+    protected function addTags(Timesheet $timesheet): void
+    {
+        $timesheetTags = $timesheet->getTags();
+
+        if ($timesheetTags->isEmpty()) {
+            return;
+        }
+
+        // Tags are always accumulated (union of all merged timesheets)
+        foreach ($timesheetTags as $tag) {
+            // Check if tag already exists by name to avoid duplicates
+            $tagExists = false;
+            foreach ($this->tags as $existingTag) {
+                if ($existingTag->getName() === $tag->getName()) {
+                    $tagExists = true;
+                    break;
+                }
+            }
+
+            if (!$tagExists) {
+                $this->tags[] = $tag;
+            }
+        }
+
+        // Sort by tag name for consistent display
+        usort($this->tags, fn($a, $b) => strcmp($a->getName(), $b->getName()));
     }
 }
