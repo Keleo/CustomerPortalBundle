@@ -32,6 +32,7 @@ class TimeRecord
     private array $hourlyRates = [];
     private float $rate = 0.0;
     private int $duration = 0;
+    private ?bool $billable = null;
     private ?Project $project = null;
 
     private function __construct(
@@ -99,6 +100,14 @@ class TimeRecord
         return $this->user;
     }
 
+    /**
+     * A merged record is only billable, if all of its timesheets are billable.
+     */
+    public function isBillable(): bool
+    {
+        return $this->billable === true;
+    }
+
     // Helper methods
 
     public function hasDifferentHourlyRates(): bool
@@ -112,6 +121,7 @@ class TimeRecord
         $this->addRate($timesheet->getRate());
         $this->addDuration($timesheet->getDuration());
         $this->setDescription($timesheet);
+        $this->billable = ($this->billable ?? true) && $timesheet->isBillable();
     }
 
     public function getProject(): ?Project

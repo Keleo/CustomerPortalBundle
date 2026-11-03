@@ -8,5 +8,23 @@
         'back': path('manage_shared_project_timesheets')
     } %}
     {% embed formEditTemplate with formOptions %}
+        {% block form_after %}
+            <script type="text/javascript">
+                (function () {
+                    // the billable status is only relevant if non-billable entries are visible
+                    const nonBillable = document.getElementById('{{ form.billableOptions.nonBillableVisible.vars.id }}');
+                    const billable = document.getElementById('{{ form.billableOptions.entryBillableVisible.vars.id }}');
+                    if (nonBillable === null || billable === null) {
+                        return;
+                    }
+                    const billableRow = billable.closest('[data-customer-portal-billable-row]') ?? billable.parentElement;
+                    const toggle = () => {
+                        billableRow.style.display = nonBillable.checked ? '' : 'none';
+                    };
+                    nonBillable.addEventListener('change', toggle);
+                    toggle();
+                })();
+            </script>
+        {% endblock %}
     {% endembed %}
 {% endblock %}

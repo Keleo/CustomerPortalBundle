@@ -1,5 +1,5 @@
 {% extends '@theme/fullpage.html.twig' %}
-{% from "macros/widgets.html.twig" import nothing_found %}
+{% from "macros/widgets.html.twig" import nothing_found, label_boolean %}
 {% import "macros/progressbar.html.twig" as progress %}
 
 {% block title %}{{ 'project' | trans }} {{ project.name }}{% endblock %}
@@ -153,6 +153,9 @@
                             {% endif %}
                             <th>{{ 'description' | trans }}</th>
                             <th class="w-min">{{ 'duration'|trans }}</th>
+                            {% if portal.hasBillableColumn() %}
+                            <th class="w-min">{{ 'billable' | trans }}</th>
+                            {% endif %}
                             {% if portal.entryRateVisible %}
                             <th class="w-min">{{ 'hourlyRate' | trans }}</th>
                             <th class="w-min">{{ 'total_rate' | trans }}</th>
@@ -167,6 +170,9 @@
                             {% endif %}
                             <td>{{ record.description | e | nl2br }}</td>
                             <td>{{ record.duration | duration }}</td>
+                            {% if portal.hasBillableColumn() %}
+                                <td>{{ label_boolean(record.billable) }}</td>
+                            {% endif %}
                             {% if portal.entryRateVisible %}
                                 {% if record.differentHourlyRates %}
                                     <td>
@@ -194,6 +200,9 @@
                             {% endif %}
                             <td></td>
                             <td>{{ durationSum | duration }}</td>
+                            {% if portal.hasBillableColumn() %}
+                            <td></td>
+                            {% endif %}
                             {% if portal.entryRateVisible %}
                             <td></td>
                             <td>{{ rateSum | format_currency(currency) }}</td>

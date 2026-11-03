@@ -1,3 +1,10 @@
+## Version 4.7.0
+
+Compatibility: requires minimum Kimai 2.25.0
+
+- Added option to exclude non-billable timesheets from the portal (default: included)
+- Added option to show the billable status of each timesheet entry
+
 ## Version 4.6.0
 
 Compatibility: requires minimum Kimai 2.25.0
