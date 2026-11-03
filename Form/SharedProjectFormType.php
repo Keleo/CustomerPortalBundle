@@ -74,6 +74,26 @@ class SharedProjectFormType extends AbstractType
             )
             ->add(
                 $builder
+                    ->create('billableOptions', FormType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.billable_options',
+                        'inherit_data' => true,
+                        'required' => false,
+                    ])
+                    ->add('nonBillableVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.non_billable_visible',
+                        'required' => false,
+                    ])
+                    ->add('entryBillableVisible', YesNoType::class, [
+                        'label' => 'shared_project_timesheets.manage.form.entry_billable_visible',
+                        'required' => false,
+                        // only relevant if non-billable entries are visible, see manage/edit.html.twig
+                        'row_attr' => [
+                            'data-customer-portal-billable-row' => '',
+                        ],
+                    ])
+            )
+            ->add(
+                $builder
                     ->create('chartOptions', FormType::class, [
                         'label' => 'shared_project_timesheets.manage.form.chart_options',
                         'inherit_data' => true,

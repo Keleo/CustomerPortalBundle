@@ -8,6 +8,9 @@ shared_project_timesheets:
             table_options: Detailtabelle - Optionen
             entry_user_visible: Benutzer sichtbar
             entry_rate_visible: Kosten sichtbar
+            billable_options: Abrechenbar - Optionen
+            non_billable_visible: Nicht abrechenbare Zeiten anzeigen
+            entry_billable_visible: Status "Abrechenbar" anzeigen
             chart_options: Diagramme - Optionen
             annual_chart_visible: Jahresdiagramm sichtbar
             monthly_chart_visible: Monatsdiagramm sichtbar

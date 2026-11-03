@@ -305,4 +305,27 @@ class TimeRecordTest extends TestCase
         self::assertEquals($secondRecordHourlyRate, $timeRecord->getHourlyRates()[1]['hourlyRate']);
         self::assertEquals($secondRecordDuration, $timeRecord->getHourlyRates()[1]['duration']);
     }
+
+    public function testBillable(): void
+    {
+        $timesheet = self::createTimesheet(new DateTime(), new User(), 0, 3600, null);
+        self::assertTrue(TimeRecord::fromTimesheet($timesheet)->isBillable());
+
+        $timesheet->setBillable(false);
+        self::assertFalse(TimeRecord::fromTimesheet($timesheet)->isBillable());
+    }
+
+    public function testBillableMerged(): void
+    {
+        $billable = self::createTimesheet(new DateTime(), new User(), 0, 3600, null);
+        $nonBillable = self::createTimesheet(new DateTime(), new User(), 0, 3600, null);
+        $nonBillable->setBillable(false);
+
+        $timeRecord = TimeRecord::fromTimesheet($billable);
+        $timeRecord->addTimesheet($billable);
+        self::assertTrue($timeRecord->isBillable());
+
+        $timeRecord->addTimesheet($nonBillable);
+        self::assertFalse($timeRecord->isBillable());
+    }
 }

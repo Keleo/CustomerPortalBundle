@@ -105,6 +105,10 @@ class ViewService
             }
         }
 
+        if (!$sharedProject->isNonBillableVisible()) {
+            $query->setBillable(true);
+        }
+
         $query->setOrderBy('begin');
         $query->setOrder(BaseQuery::ORDER_ASC);
 
@@ -128,10 +132,15 @@ class ViewService
             }
             if ($mergeMode !== RecordMergeMode::MODE_NONE) {
                 // Assume that records from one user will be merged into one
-                if (!\array_key_exists($userKey, $timeRecords[$dateKey])) {
-                    $timeRecords[$dateKey][$userKey] = [TimeRecord::fromTimesheet($timesheet, $mergeMode)];
+                $mergeKey = $userKey;
+                if ($sharedProject->hasBillableColumn()) {
+                    // do not merge billable and non-billable records, as the billable status is shown
+                    $mergeKey .= $timesheet->isBillable() ? '-billable' : '-non-billable';
+                }
+                if (!\array_key_exists($mergeKey, $timeRecords[$dateKey])) {
+                    $timeRecords[$dateKey][$mergeKey] = [TimeRecord::fromTimesheet($timesheet, $mergeMode)];
                 } else {
-                    $timeRecords[$dateKey][$userKey][0]->addTimesheet($timesheet);
+                    $timeRecords[$dateKey][$mergeKey][0]->addTimesheet($timesheet);
                 }
             } else {
                 // One user can be assigned to multiple records per day
@@ -197,6 +206,12 @@ class ViewService
                     'customer' => $sharedProject->getCustomer(),
                     'year' => $year,
                 ]);
+        }
+
+        if (!$sharedProject->isNonBillableVisible()) {
+            $queryBuilder
+                ->andWhere('t.billable = :billable')
+                ->setParameter('billable', true);
         }
 
         $result = $queryBuilder
@@ -265,6 +280,12 @@ class ViewService
                     'year' => $year,
                     'month' => $month,
                 ]);
+        }
+
+        if (!$sharedProject->isNonBillableVisible()) {
+            $queryBuilder
+                ->andWhere('t.billable = :billable')
+                ->setParameter('billable', true);
         }
 
         $result = $queryBuilder

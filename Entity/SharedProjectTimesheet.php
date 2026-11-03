@@ -70,6 +70,12 @@ class SharedProjectTimesheet
     #[ORM\Column(name: 'time_budget_stats_visible', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $timeBudgetStatsVisible = false;
 
+    #[ORM\Column(name: 'non_billable_visible', type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $nonBillableVisible = true;
+
+    #[ORM\Column(name: 'entry_billable_visible', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $entryBillableVisible = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -193,6 +199,34 @@ class SharedProjectTimesheet
     public function setTimeBudgetStatsVisible(bool $timeBudgetStatsVisible): void
     {
         $this->timeBudgetStatsVisible = $timeBudgetStatsVisible;
+    }
+
+    public function isNonBillableVisible(): bool
+    {
+        return $this->nonBillableVisible;
+    }
+
+    public function setNonBillableVisible(bool $nonBillableVisible): void
+    {
+        $this->nonBillableVisible = $nonBillableVisible;
+    }
+
+    public function isEntryBillableVisible(): bool
+    {
+        return $this->entryBillableVisible;
+    }
+
+    public function setEntryBillableVisible(bool $entryBillableVisible): void
+    {
+        $this->entryBillableVisible = $entryBillableVisible;
+    }
+
+    /**
+     * The billable status is only meaningful if non-billable entries are shown at all.
+     */
+    public function hasBillableColumn(): bool
+    {
+        return $this->nonBillableVisible && $this->entryBillableVisible;
     }
 
     public function getType(): string

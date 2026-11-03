@@ -8,6 +8,9 @@ shared_project_timesheets:
             table_options: Timesheet table options
             entry_user_visible: Entry user visible
             entry_rate_visible: Entry rate visible
+            billable_options: Billable options
+            non_billable_visible: Include non-billable timesheets
+            entry_billable_visible: Show billable status
             chart_options: Chart options
             annual_chart_visible: Annual chart visible
             monthly_chart_visible: Monthly chart visible
